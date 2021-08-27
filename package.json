@@ -1,0 +1,22 @@
+{
+  "name": "chessbot",
+  "version": "1.0.0",
+  "description": "A bot for playing chess",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "OchiMoto21",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.5.3",
+    "@discordjs/voice": "^0.6.0",
+    "chess.js": "^0.12.0",
+    "discord-ytdl-core": "^5.0.4",
+    "discord.js": "^13.1.0",
+    "ffmpeg-static": "^4.4.0",
+    "libsodium-wrappers": "^0.7.9",
+    "yt-search": "^2.10.0",
+    "ytdl-core": "^4.9.1"
+  }
+}
