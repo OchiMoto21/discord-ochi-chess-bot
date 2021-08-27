@@ -1,4 +1,3 @@
-const config = require('./config.json');
 const Discord = require('discord.js');
 
 const client = new Discord.Client({
@@ -14,7 +13,7 @@ client.events = new Discord.Collection();
     require(`./handlers/${handler}`)(client, Discord);
 })
 
-client.login(config.token);
+client.login(process.env.TOKEN);
 
 // const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
 // for (const file of commandFiles){
