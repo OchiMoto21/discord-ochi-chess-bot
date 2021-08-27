@@ -13,7 +13,7 @@ client.events = new Discord.Collection();
     require(`./handlers/${handler}`)(client, Discord);
 })
 
-client.login(process.env.TOKEN);
+client.login(process.env.DJS_TOKEN);
 
 // const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
 // for (const file of commandFiles){
