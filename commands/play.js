@@ -60,7 +60,7 @@ module.exports = {
             });
             
 
-            await message.channel.send(`:thumbsup: Now Playing ${video.title}`)
+            await message.channel.send(`Playing \`${video.title}\``)
         } else {
             message.channel.send('No video results found');
         }
