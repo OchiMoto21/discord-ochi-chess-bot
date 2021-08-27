@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-
+const config = require('./config.json');
 const client = new Discord.Client({
     intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Discord.Intents.FLAGS.GUILD_VOICE_STATES]
 });
@@ -13,7 +13,7 @@ client.events = new Discord.Collection();
     require(`./handlers/${handler}`)(client, Discord);
 })
 
-client.login(process.env.DJS_TOKEN);
+client.login(config.token);
 
 // const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
 // for (const file of commandFiles){
