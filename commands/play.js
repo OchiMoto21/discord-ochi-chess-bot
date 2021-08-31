@@ -1,9 +1,10 @@
 const ytdl = require('discord-ytdl-core');
 const ytSearch = require('yt-search');
 const voiceDiscord = require('@discordjs/voice');
-
+const queue = new Map();
 module.exports = {
     name: 'play',
+    aliases: ['pause', 'stop','loop'],
     description: 'play a video from youtube',
     
     async execute(message, args, cmd, client, Discord){
@@ -12,57 +13,93 @@ module.exports = {
         const permissions = channel.permissionsFor(message.client.user);
         if(!permissions.has('CONNECT')) return message.channel.send("You don't have the correct permission!");
         if(!permissions.has('SPEAK')) return message.channel.send("You don't have the correct permission!");
-        if(!args.length) return message.channel.send('You need to add link in the second arguments!');
+        
 
-        const connection = voiceDiscord.joinVoiceChannel({
-            channelId: channel.id,
-            guildId: message.guild.id,
-            adapterCreator: message.guild.voiceAdapterCreator
-        });
-        const player = voiceDiscord.createAudioPlayer();
-
-        const videoFinder = async (query) => {
-            const videoResult = await ytSearch(query);
-
-            return (videoResult.videos.length > 1) ? videoResult.videos[0] : null;
-        }
-
-        const video = await videoFinder(args.join(' '));
-
-        if(video){
-            const stream = ytdl(video.url,{
-                filter:'audioonly', 
-                opusEncoded: true,
-                liveBuffer: 4000,
-                highWaterMark: 1<<25
-            });
-            const resource = voiceDiscord.createAudioResource(stream, {type : "opus"});
-            try {
-                player.play(resource);
-                connection.subscribe(player);
-                // console.log(resource);
-            } catch(err) {
-                console.log(err);
-                // const Seek = resource.playbackDuration;
-                // const new_stream = ytdl(video.url,{filter:'audioonly', opusEncoded: false});
-                // const new_resource = voiceDiscord.createAudioResource(new_stream, {seek: Seek});
-                // player.play(new_resource);
-                // connection.subscribe(player);               
+        let server_queue = queue.get(message.guild.id);
+        if (cmd == "loop") {
+            if (server_queue){
+                server_queue.loop = !server_queue.loop;
             }
-            player.on('error', () => {
-                const Seek = resource.playbackDuration;
-                const new_resource = voiceDiscord.createAudioResource(stream, {type:"opus", seek: Seek});
-                player.play(new_resource);
-                connection.subscribe(player);
-            })
-            player.on('finish', () => {
-                connection.destroy();
-            });
-            
-
-            await message.channel.send(`Playing \`${video.title}\``)
-        } else {
-            message.channel.send('No video results found');
         }
+        
+        if(cmd === "play"){
+            if(!args.length) return message.channel.send('You need to add link in the second arguments!');
+            const videoFinder = async (query) => {
+                const videoResult = await ytSearch(query);
+    
+                return (videoResult.videos.length > 1) ? videoResult.videos[0] : null;
+            }
+    
+            const video = await videoFinder(args.join(' '));
+            if(video){
+                if (!server_queue){
+                    
+                    const connection = voiceDiscord.joinVoiceChannel({
+                        channelId: channel.id,
+                        guildId: message.guild.id,
+                        adapterCreator: message.guild.voiceAdapterCreator
+                    });
+                    const player = voiceDiscord.createAudioPlayer();
+                    const queue_constructor = {
+                        guild: message.guild.id,
+                        channel: message.channel, 
+                        connection: connection,
+                        player: player,
+                        songs: [],
+                        loop: false
+                    }
+                    queue_constructor.connection.subscribe(queue_constructor.player);
+                    queue.set(message.guild.id, queue_constructor);
+                    console.log("_____________\n queue is made \n_________________");
+                    server_queue = queue_constructor;
+                    server_queue.songs.push(video.url);
+                    video_player(server_queue);
+                    return message.channel.send(`👍 **${video.title}** added to queue!`);
+                } else if (server_queue.songs.length === 0) {
+                    server_queue.songs.push(video.url);
+                    video_player(server_queue);
+                    return message.channel.send(`👍 **${video.title}** added to queue!`);
+                } else {
+                    server_queue.songs.push(video.url);
+                    return message.channel.send(`👍 **${video.title}** added to queue!`);
+                }
+            } else {
+                return message.channel.send('No video results found');
+            }
+        }
+        if(cmd === "stop"){
+            if(server_queue){   
+                queue.delete(server_queue.guild);
+            }
+            const connection = voiceDiscord.getVoiceConnection(message.guild.id);
+            if (connection){
+                connection.destroy();
+            }
+        }  
+    }
+}
+
+const video_player = async (server_queue) => {
+    if(server_queue.songs.length > 0){
+        const stream = ytdl(server_queue.songs[0],{
+            filter:'audioonly', 
+            opusEncoded: true,
+            liveBuffer: 4000,
+            highWaterMark: 1<<25
+        });
+        const resource = voiceDiscord.createAudioResource(stream, {type : "opus"});
+        
+        try {
+            server_queue.player.play(resource);
+        } catch(err) {
+            console.log(err);
+        }
+
+        server_queue.player.on(voiceDiscord.AudioPlayerStatus.Idle, () => {
+            if (!server_queue.loop){
+                server_queue.songs.shift();
+            }
+            video_player(server_queue);
+        })
     }
 }
