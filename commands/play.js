@@ -84,8 +84,8 @@ const video_player = async (server_queue) => {
         const stream = ytdl(server_queue.songs[0],{
             filter:'audioonly', 
             opusEncoded: true,
-            liveBuffer: 4000,
-            highWaterMark: 1<<25
+            liveBuffer: 20000,
+            highWaterMark: 1<<30
         });
         const resource = voiceDiscord.createAudioResource(stream, {type : "opus"});
         
@@ -94,7 +94,12 @@ const video_player = async (server_queue) => {
         } catch(err) {
             console.log(err);
         }
-
+        server_queue.player.on('error', error => {
+			console.error(`Error: ${error.message} with resource ${error.resource.metadata.title}`);
+			server_queue.songs.shift();
+			server_queue.channel.send('There is an error playing the song!');
+			video_player(server_queue);
+		});
         server_queue.player.on(voiceDiscord.AudioPlayerStatus.Idle, () => {
             if (!server_queue.loop){
                 server_queue.songs.shift();
