@@ -19,10 +19,27 @@ module.exports = {
         if (cmd == "loop") {
             if (server_queue){
                 server_queue.loop = !server_queue.loop;
-            }
+            } else {
+		message.channel.send("There's no song to loop on!");
+	    }
         }
+	if (cmd == "pause") {
+            if (server_queue){
+		server_queue.player.on(voiceDiscord.AudioPlayerStatus.Playing, () => {
+			server_queue.player.pause();
+			message.channel.send("The player is paused!");
+		});
+            } else {
+	    	message.channel.send("There's no player to be paused!");
+	    }
+        } 
         
         if(cmd === "play"){
+	    server_queue.player.on(voiceDiscord.AudioPlayerStatus.Paused, () => {
+		    server_queue.player.unpause();
+		    return message.channel.send("The player is unpaused!");
+	    });
+			
             if(!args.length) return message.channel.send('You need to add link in the second arguments!');
             const videoFinder = async (query) => {
                 const videoResult = await ytSearch(query);
