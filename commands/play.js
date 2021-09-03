@@ -117,7 +117,6 @@ const video_player = async (server_queue) => {
             console.log(err);
         }
         server_queue.player.on('error', error => {
-		console.error(`Error: ${error.message} with resource ${error.resource.metadata.title}`);
 		server_queue.songs.shift();
 		server_queue.channel.send('There is an error playing the song!');
 		video_player(server_queue);
