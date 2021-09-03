@@ -28,6 +28,7 @@ module.exports = {
 		server_queue.player.on(voiceDiscord.AudioPlayerStatus.Playing, () => {
 			server_queue.player.pause();
 			message.channel.send("The player is paused!");
+			console.log("The player is paused");
 		});
             } else {
 	    	message.channel.send("There's no player to be paused!");
