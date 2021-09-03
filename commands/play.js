@@ -25,11 +25,7 @@ module.exports = {
         }
 	if (cmd == "pause") {
             if (server_queue){
-		server_queue.player.on(voiceDiscord.AudioPlayerStatus.Playing, () => {
-			server_queue.player.pause();
-			message.channel.send("The player is paused!");
-			console.log("The player is paused");
-		});
+		pause_player(server_queue);
             } else {
 	    	message.channel.send("There's no player to be paused!");
 	    }
@@ -99,6 +95,14 @@ module.exports = {
             }
         }  
     }
+}
+
+const pause_player = async (server_queue) => {
+    server_queue.player.on(voiceDiscord.AudioPlayerStatus.Playing, () => {
+	   server_queue.player.pause();
+	   console.log("The player is paused");
+	   return message.channel.send("The player is paused!");
+    });
 }
 
 const video_player = async (server_queue) => {
