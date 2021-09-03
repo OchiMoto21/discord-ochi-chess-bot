@@ -35,10 +35,12 @@ module.exports = {
         } 
         
         if(cmd === "play"){
-	    server_queue.player.on(voiceDiscord.AudioPlayerStatus.Paused, () => {
-		    server_queue.player.unpause();
-		    return message.channel.send("The player is unpaused!");
-	    });
+	    if (server_queue){
+		 server_queue.player.on(voiceDiscord.AudioPlayerStatus.Paused, () => {
+			server_queue.player.unpause();
+			return message.channel.send("The player is unpaused!");
+		 });
+	    }
 			
             if(!args.length) return message.channel.send('You need to add link in the second arguments!');
             const videoFinder = async (query) => {
