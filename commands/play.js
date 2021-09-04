@@ -60,7 +60,7 @@ module.exports = {
                 if(!server_queue.playing){
                     server_queue.player.unpause();
                     server_queue.playing = true;
-                    return message.send.channel("The player is unpaused!");
+                    return message.channel.send("The player is unpaused!");
                 }
             }
             if(!args.length) return message.channel.send('You need to add link in the second arguments!');
