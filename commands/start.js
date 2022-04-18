@@ -6,172 +6,179 @@ const Board = new Map();
 module.exports = {
     name: 'start',
     aliases: ['join', 'move', 'restart', 'quit', 'resign','flip'],
-    description: "This command will return a random gameplay of chess",
+    description: "This command will start a game of chess",
     async execute(message, args, cmd, client, Discord){
-        
-        const memberMessageEmbed = new Discord.MessageEmbed().setDescription("Starting!");
-        //    .setAuthor(client.user.tag);
-        
-        let player_board = Board.get(message.author.id);
-        if (!isNaN(player_board)){
-            player_board = Board.get(player_board);
-        }
-
-        if(cmd === 'start'){
-            let chess = new Chess();
-            let text = "";
+        try {        
+            const memberMessageEmbed = new Discord.MessageEmbed().setDescription("Starting!");
+            //    .setAuthor(client.user.tag);
             
-            if(!player_board) {
-                
-                const thread = await message.channel.threads.create({
-                    name: 'Chess Battle '+ message.author.tag,
-                    autoArchiveDuration: 1440,
-                    reason: 'Needed a separate thread for chess game',
-                });
-                const board_constructor = {
-                    player_1 : {user: message.author, turn : 'w' } ,
-                    player_2 : {user: message.author, turn : 'b'},
-                    chess : chess,
-                    text : text,
-                    room : false,
-                    thread : thread,
-                    channel : message.channel
-                }
-                Board.set(message.author.id, board_constructor);
-                
-                
-                message.channel.send("You have start a game!");
-                boardUpdate(board_constructor.thread,board_constructor,memberMessageEmbed, true);
-                boardUpdate(board_constructor.channel,board_constructor, memberMessageEmbed, null); 
-            } else {
-                message.channel.send("You have start a game!");
+            let player_board = Board.get(message.author.id);
+            if (!isNaN(player_board)){
+                player_board = Board.get(player_board);
             }
-        }
 
-        if(cmd === 'move'){
-            if(!player_board) {
-                message.channel.send('You have not start a game. Use "&start" command to start a new game!');
-            } else if ((message.author === player_board.player_1.user && player_board.chess.turn() === player_board.player_1.turn)||(message.author === player_board.player_2.user && player_board.chess.turn() === player_board.player_2.turn)){
-                if (args.length === 1){
-                    if(player_board.chess.move(args[0])){
-                        await boardUpdate(player_board.thread,player_board,memberMessageEmbed, true);
-                        await boardUpdate(player_board.channel,player_board,memberMessageEmbed, null);
-                        console.log(player_board.chess.moves());
+            if(cmd === 'start'){
+                let chess = new Chess();
+                let text = "";
+                
+                if(!player_board) {
+                    
+                    const thread = await message.channel.threads.create({
+                        name: 'Chess Battle '+ message.author.tag,
+                        autoArchiveDuration: 1440,
+                        reason: 'Needed a separate thread for chess game',
+                    });
+                    const board_constructor = {
+                        player_1 : {user: message.author, turn : 'w' } ,
+                        player_2 : {user: message.author, turn : 'b'},
+                        chess : chess,
+                        text : text,
+                        room : false,
+                        thread : thread,
+                        channel : message.channel
                     }
-                    else {
-                        message.channel.send("The move is not legal!");
-                    }
-                } else if (args.length === 3 && args[1] === 'to') {
-                    let moveFromTo = {from : args[0], to : args[2]};
-                    if(player_board.chess.move(moveFromTo)){
-                        await boardUpdate(player_board.thread,player_board,memberMessageEmbed, true);
-                        await boardUpdate(player_board.channel,player_board,memberMessageEmbed, null);
-                        console.log(player_board.chess.moves());
-                    }
-                    else {
-                        message.channel.send("The move is not legal!");
-                    }
+                    Board.set(message.author.id, board_constructor);
+                    
+                    
+                    message.channel.send("You have start a game!");
+                    boardUpdate(board_constructor.thread,board_constructor,memberMessageEmbed, true);
+                    boardUpdate(board_constructor.channel,board_constructor, memberMessageEmbed, null); 
+                } else {
+                    message.channel.send("You have start a game!");
                 }
-                if (player_board.chess.game_over()) {
+            }
+
+            if(cmd === 'move'){
+                if(!player_board) {
+                    message.channel.send('You have not start a game. Use "&start" command to start a new game!');
+                } else if ((message.author === player_board.player_1.user && player_board.chess.turn() === player_board.player_1.turn)||(message.author === player_board.player_2.user && player_board.chess.turn() === player_board.player_2.turn)){
+                    if (args.length === 1){
+                        if(player_board.chess.move(args[0])){
+                            await boardUpdate(player_board.thread,player_board,memberMessageEmbed, true);
+                            await boardUpdate(player_board.channel,player_board,memberMessageEmbed, null);
+                            console.log(player_board.chess.moves());
+                        }
+                        else {
+                            message.channel.send("The move is not legal!");
+                        }
+                    } else if (args.length === 3 && args[1] === 'to') {
+                        let moveFromTo = {from : args[0], to : args[2]};
+                        if(player_board.chess.move(moveFromTo)){
+                            await boardUpdate(player_board.thread,player_board,memberMessageEmbed, true);
+                            await boardUpdate(player_board.channel,player_board,memberMessageEmbed, null);
+                            console.log(player_board.chess.moves());
+                        }
+                        else {
+                            message.channel.send("The move is not legal!");
+                        }
+                    }
+                    if (player_board.chess.game_over()) {
+                        if (player_board.player_1.user === player_board.player_2.user){
+                            Board.delete(message.author.id);
+        
+                        } else {
+                            Board.delete(player_board.player_2.user.id);
+                            Board.delete(message.author.id);
+                        }
+                        
+                        return message.channel.send({
+                            embeds : [memberMessageEmbed
+                                .setTitle(`Chess Battle`)
+                                .setDescription("**" + message.author.tag + "**\n Won the game!" )]                        
+                        }); 
+                    }         
+                } 
+                else {
+                    message.channel.send("it's not your turn yet!");
+                }
+
+            }
+
+            if(cmd === 'restart'){
+                
+                if(!player_board) {
+                    message.channel.send('You have not start a game. Use "&start" command to start a new game!');
+                } else {
+                    player_board.chess.reset();
+                    boardUpdate(player_board.thread,player_board,memberMessageEmbed, true);
+                    boardUpdate(player_board.channel,player_board,memberMessageEmbed, null);
+                                
+                }
+            }
+            
+            if(cmd === 'join'){
+                if (!args.length) return message.channel.send("Mention the player to join their game in the argument.");
+                
+                let player_1 = client.users.cache.get(getUserFromMention(args[0]));
+                
+                if (player_1 === message.author) return message.channel.send('You want to play alone? :(');
+                
+                let otherPlayerBoard = Board.get(player_1.id);
+                
+
+                //const permissionMessage = await message.channel.send(message.author.tag +" would like to join "+ player_1.tag +"'s game. Do "+player_1.tag+ " accept?");
+                if (otherPlayerBoard) {
+                    if (otherPlayerBoard.room) return message.channel.send("The game you want to join is full");   
+                    message.react('🇾').then(() => message.react('🇳'));
+                    client.on('messageReactionAdd', async (reaction, user) => {
+                        if (reaction.message.partial) await reaction.message.fetch();
+                        if (reaction.partial) await reaction.fetch();
+                        if (user.bot) return;
+                        if (!reaction.message.guild) return;
+            
+                        if (user.id === player_1.id) {
+                            if (reaction.emoji.name === '🇾') {
+                                otherPlayerBoard.player_2.user = message.author;
+                                otherPlayerBoard.room = true;
+                                Board.set(message.author.id, player_1.id);
+                                console.log(otherPlayerBoard);
+
+                                return message.channel.send( player_1.tag + " accepted your request to join.");
+                            }
+                            if (reaction.emoji.name === '🇳') {
+                                return message.channel.send( player_1.tag + " declined your request to join.");
+                            }
+                        } else {
+                            message.channel.send("Who are you?")
+                        }
+                    });
+                } else {
+                    message.channel.send("The game you want to join doesn't exist.");
+                }
+        
+            }
+
+            if(cmd === 'quit' || cmd === 'resign'){
+                if(player_board) {
                     if (player_board.player_1.user === player_board.player_2.user){
                         Board.delete(message.author.id);
-    
+                        await player_board.thread.delete();
+                        return winnerUpdate(message, message.author, memberMessageEmbed);
+                        
+
                     } else {
+
                         Board.delete(player_board.player_2.user.id);
                         Board.delete(message.author.id);
-                    }
-                    
-                    return message.channel.send({
-                        embeds : [memberMessageEmbed
-                            .setTitle(`Chess Battle`)
-                            .setDescription("**" + message.author.tag + "**\n Won the game!" )]                        
-                    }); 
-                }         
-            } 
-             else {
-                message.channel.send("it's not your turn yet!");
-            }
-
-        }
-
-        if(cmd === 'restart'){
-            
-            if(!player_board) {
-                message.channel.send('You have not start a game. Use "&start" command to start a new game!');
-            } else {
-                player_board.chess.reset();
-                boardUpdate(player_board.thread,player_board,memberMessageEmbed, true);
-                boardUpdate(player_board.channel,player_board,memberMessageEmbed, null);
-                            
-            }
-        }
-        
-        if(cmd === 'join'){
-            if (!args.length) return message.channel.send("Mention the player to join their game in the argument.");
-            
-            let player_1 = client.users.cache.get(getUserFromMention(args[0]));
-            
-            if (player_1 === message.author) return message.channel.send('You want to play alone? :(');
-            
-            let otherPlayerBoard = Board.get(player_1.id);
-            
-
-            //const permissionMessage = await message.channel.send(message.author.tag +" would like to join "+ player_1.tag +"'s game. Do "+player_1.tag+ " accept?");
-            if (otherPlayerBoard) {
-                if (otherPlayerBoard.room) return message.channel.send("The game you want to join is full");   
-                message.react('🇾').then(() => message.react('🇳'));
-                client.on('messageReactionAdd', async (reaction, user) => {
-                    if (reaction.message.partial) await reaction.message.fetch();
-                    if (reaction.partial) await reaction.fetch();
-                    if (user.bot) return;
-                    if (!reaction.message.guild) return;
-        
-                    if (user.id === player_1.id) {
-                        if (reaction.emoji.name === '🇾') {
-                            otherPlayerBoard.player_2.user = message.author;
-                            otherPlayerBoard.room = true;
-                            Board.set(message.author.id, player_1.id);
-                            console.log(otherPlayerBoard);
-
-                            return message.channel.send( player_1.tag + " accepted your request to join.");
+                        await player_board.thread.delete();
+                        if (message.author === player_board.player_1.user){
+                            return winnerUpdate(message, player_board.player_2.user, memberMessageEmbed);
+                        } else {
+                            return winnerUpdate(message, player_board.player_1.user, memberMessageEmbed);
                         }
-                        if (reaction.emoji.name === '🇳') {
-                            return message.channel.send( player_1.tag + " declined your request to join.");
-                        }
-                    } else {
-                        message.channel.send("Who are you?")
-                    }
-                });
-            } else {
-                message.channel.send("The game you want to join doesn't exist.");
-            }
-    
-        }
-
-        if(cmd === 'quit' || cmd === 'resign'){
-            if(player_board) {
-                if (player_board.player_1.user === player_board.player_2.user){
-                    Board.delete(message.author.id);
-                    await player_board.thread.delete();
-                    return winnerUpdate(message, message.author, memberMessageEmbed);
-                    
-
-                } else {
-
-                    Board.delete(player_board.player_2.user.id);
-                    Board.delete(message.author.id);
-                    await player_board.thread.delete();
-                    if (message.author === player_board.player_1.user){
-                        return winnerUpdate(message, player_board.player_2.user, memberMessageEmbed);
-                    } else {
-                        return winnerUpdate(message, player_board.player_1.user, memberMessageEmbed);
                     }
                 }
             }
-        }
-        
-        if(cmd === 'flip'){
-            boardUpdate(message.channel,player_board,memberMessageEmbed, true);
+            
+            if(cmd === 'flip'){
+                boardUpdate(message.channel,player_board,memberMessageEmbed, true);
+            }
+        } catch{
+            console.error;
+            message.channel.send({embeds : [memberMessageEmbed
+                .setTitle("There's something wrong")
+                .setDescription("This message will be deleted in 10 seconds.")
+                ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
         }
     }
 }
