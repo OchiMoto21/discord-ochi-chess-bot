@@ -14,39 +14,152 @@ module.exports = {
                     if (!args.length){
                         if(message.attachments.size === 1){
                             console.log("Yes, there's an attachemnt");
-                            return request(message.attachments.first().url, 
+                            request(message.attachments.first().url, 
                                 function (error, response, body) {
                                     console.error('error:', error); 
                                     console.log('statusCode:', response && response.statusCode); 
                                     console.log('body:', body);
-                                    const str = body.trim().split('\n');
-                                    for(var i = 0; i < body.length; ++i){
-                                        var iWantButtonsDaddy = [];
-                                        console.log(str[i]);
-                                        var m = str[i].split(',');
-                                        console.log(m.length);
-                                        for (var i = 1; i <= (m.length-1)/2; ++i) {
-                                            iWantButtonsDaddy[i] = new Discord.MessageButton()
-                                            .setLabel(m[i*2-1])
-                                            .setStyle('LINK')
-                                            .setURL(m[i*2])
+                                    const str = body.trim().replace(/(\r\n|\n|\r)/gm, "\n").split("\n");
+                                    console.log('str:', str);
+                                    console.log('str.length:', str.length);
+                                    for(var i = 0; i < parseInt(str.length); ++i){
+                                        try {
+
+                                            var iWantButtonsDaddy = [];
+                                            var m = [];
+                                            var embed = new Discord.MessageEmbed()
+                                            var title = ""; 
+                                            var image = "";
+                                            var m = String(str[i]).split(',');
+                                            console.log(str[i]);
+                                            console.log(m.length);
+                                            var title_state = m[1].startsWith("title.");
+                                            var image_state = m[0].startsWith("image.no");
+                                            if(title_state){
+                                                if (image_state){
+                                                    m.shift();
+                                                } else {
+                                                    var image = m[0];
+                                                    m.shift();
+                                                }
+                                                var title = m[0];
+                                                m.shift();
+                                                console.log(m.length);
+                                                console.log(m);
+                                                if (!m.length == 0 && !m.length > 5){
+                                                    for (var j = 1; j <= (m.length)/2; ++j) {
+                                                        iWantButtonsDaddy[j] = new Discord.MessageButton()
+                                                        .setLabel(m[j*2-2])
+                                                        .setStyle('LINK')
+                                                        .setURL(m[j*2-1])
+                                                    }
+                                                    var row = new Discord.MessageActionRow()
+                                                    .addComponents(
+                                                        iWantButtonsDaddy
+                                                    );
+                                                }
+                                                if (!m.length == 0 && !m.length > 5){
+                                                    if (image_state){
+                                                        message.channel.send({
+                                                            embeds : [embed
+                                                                .setTitle(title.slice(6))
+                                                                .setColor('#dc661f')
+                                                                ],
+                                                            components: [row]
+                                                        })
+                                                    } else {
+                                                        message.channel.send({
+                                                            embeds : [embed
+                                                                .setTitle(title.slice(6))
+                                                                .setColor('#dc661f')
+                                                                .setImage(image)
+                                                                ],
+                                                            components: [row]
+                                                        })
+                                                    }
+                                                } else{
+                                                    if (image_state){
+                                                        message.channel.send({
+                                                            embeds : [embed
+                                                                .setTitle(title.slice(6))
+                                                                .setColor('#dc661f')
+                                                                ]
+                                                        })
+                                                    } else {
+                                                        message.channel.send({
+                                                            embeds : [embed
+                                                                .setTitle(title.slice(6))
+                                                                .setColor('#dc661f')
+                                                                .setImage(image)
+                                                                ]
+                                                        })
+                                                    }
+                                                }
+
+                                            } else {
+                                                if (image_state){
+                                                    m.shift();
+                                                } else {
+                                                    var image = m[0];
+                                                    m.shift();
+                                                }
+                                                console.log(m.length);
+                                                console.log(m);
+                                                if (!m.length == 0 && !m.length > 5){
+                                                    for (var j = 1; j <= (m.length)/2; ++j) {
+                                                        iWantButtonsDaddy[j] = new Discord.MessageButton()
+                                                        .setLabel(m[j*2-2])
+                                                        .setStyle('LINK')
+                                                        .setURL(m[j*2-1])
+                                                    }
+                                                    var row = new Discord.MessageActionRow()
+                                                    .addComponents(
+                                                        iWantButtonsDaddy
+                                                    );
+                                                }
+                                                if(!m.length == 0 && !m.length > 5){
+                                                    if (image_state){
+                                                        console.log("Testing button only");
+                                                        message.channel.send({
+                                                            components: [row]
+                                                        })
+                                                    } else {
+                                                        console.log("Testing button with image");
+                                                        message.channel.send({
+                                                            embeds : [embed
+                                                                .setColor('#dc661f')
+                                                                .setImage(image)
+                                                                ],
+                                                            components: [row]
+                                                        })
+                                                    }
+                                                } else {
+                                                    if (!image_state){
+                                                        console.log("Testing image only");
+                                                        message.channel.send({
+                                                            embeds : [embed
+                                                                .setColor('#dc661f')
+                                                                .setImage(image)
+                                                                ]
+                                                        })
+                                                    }
+                                                }
+
+                                            }
+                                        } catch {
+                                            console.error;
+                                            return message.channel.send({embeds : [memberMessageEmbed
+                                                .setTitle("Failed to read text file.")
+                                                .setDescription("This message will be deleted in 10 seconds.")
+                                                ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})        
                                         }
-                                        
-                                        const row = new Discord.MessageActionRow()
-                                        .addComponents(
-                                            iWantButtonsDaddy
-                                        );
-                                        message.channel.send({
-                                            embeds : [memberMessageEmbed
-                                                .setColor('#dc661f')
-                                                .setImage(m[0])
-                                                ],
-                                            components: [row]
-                                        })
-                                        message.delete()
+                                        console.log('row:',i);
                                     }
-                            });
-                        }
+                                }
+                            );
+                            message.delete();
+                            return;
+                        } 
                     } else {
                         return message.channel.send({embeds : [memberMessageEmbed
                             .setTitle("There's no attachment.")
