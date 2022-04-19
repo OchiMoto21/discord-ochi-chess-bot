@@ -12,7 +12,8 @@ module.exports = {
                 try {
                     if (!args.length){
                         if(message.attachments.size === 1){
-                            if (message.attachments.first().url.endsWith(".txt")){
+                            console.log("Yes, there's an attachemnt");
+                            if (String(message.attachments.first().url).endsWith(".txt")){
                                 response = fetch(message.attachments.first().url);
 
                                 if(!response){
