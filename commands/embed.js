@@ -16,7 +16,7 @@ module.exports = {
                                 response = fetch(message.attachments.first().url);
 
                                 if(!response){
-                                    message.channel.send({embeds : [memberMessageEmbed
+                                    return message.channel.send({embeds : [memberMessageEmbed
                                         .setTitle("There's an error in fetching the file.")
                                         .setDescription("This message will be deleted in 10 seconds.")
                                         ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
@@ -29,7 +29,7 @@ module.exports = {
                         }
                     } else {
                         return message.channel.send({embeds : [memberMessageEmbed
-                            .setTitle("There's no attachement.")
+                            .setTitle("There's no attachment.")
                             .setDescription("This message will be deleted in 10 seconds.")
                             ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                     }
