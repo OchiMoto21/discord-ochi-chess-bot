@@ -268,7 +268,7 @@ module.exports = {
                                     )
                                     .catch(
                                         console.error,
-                                        message.channel.send({embeds : [embed
+                                        message.channel.send({embeds : [new Discord.MessageEmbed()
                                             .setTitle("Not a valid argument.")
                                             .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
                                             ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
@@ -286,7 +286,7 @@ module.exports = {
                                     )
                                     .catch(
                                         console.error,
-                                        message.channel.send({embeds : [embed
+                                        message.channel.send({embeds : [new Discord.MessageEmbed()
                                             .setTitle("Not a valid argument.")
                                             .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
                                             ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
@@ -307,7 +307,7 @@ module.exports = {
                                 )
                                 .catch(
                                     console.error,
-                                    message.channel.send({embeds : [embed
+                                    message.channel.send({embeds : [new Discord.MessageEmbed()
                                         .setTitle("Not a valid argument.")
                                         .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
                                         ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
@@ -322,7 +322,7 @@ module.exports = {
                                 )
                                 .catch(
                                     console.error,
-                                    message.channel.send({embeds : [memberMessageEmbed
+                                    message.channel.send({embeds : [new Discord.MessageEmbed()
                                         .setTitle("Not a valid argument.")
                                         .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
                                         ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
@@ -331,7 +331,7 @@ module.exports = {
                             message.delete()
                         }
                     } else {
-                        message.channel.send({embeds : [memberMessageEmbed
+                        message.channel.send({embeds : [new Discord.MessageEmbed()
                             .setTitle("Not a valid argument.")
                             .setDescription("This message will be deleted in 10 seconds.")
                             ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
@@ -340,7 +340,7 @@ module.exports = {
                 } catch {
                     console.error;
                     message.delete();
-                    message.channel.send({embeds : [memberMessageEmbed
+                    message.channel.send({embeds : [new Discord.MessageEmbed()
                         .setTitle("Not a valid argument.")
                         .setDescription("This message will be deleted in 10 seconds.")
                         ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
