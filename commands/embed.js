@@ -223,6 +223,7 @@ module.exports = {
                 try {
                     if (!args.length) return message.channel.send("There's no argument D:");
                     var iWantButtonsDaddy = [];
+                    var embed = new Discord.MessageEmbed();
                     const m = args.join(" ").split(',');
                     console.log(m);
                     var title = ""; 
@@ -233,9 +234,9 @@ module.exports = {
                     var title_state = m[0].startsWith("title.");
                     
                     if (title_state){
+                        var title = m[0];
                         m.shift();
                     } else {
-                        var title = m[0];
                         m.shift();
                     }
                     
@@ -257,7 +258,7 @@ module.exports = {
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
                                     .then(msg => 
                                         msg.edit({
-                                            embeds : [memberMessageEmbed
+                                            embeds : [embed
                                                 .setTitle(title)
                                                 .setColor('#dc661f')
                                                 .setImage(message.attachments.first().url)
@@ -267,7 +268,7 @@ module.exports = {
                                     )
                                     .catch(
                                         console.error,
-                                        message.channel.send({embeds : [memberMessageEmbed
+                                        message.channel.send({embeds : [embed
                                             .setTitle("Not a valid argument.")
                                             .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
                                             ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
@@ -276,7 +277,7 @@ module.exports = {
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
                                     .then(msg => 
                                         msg.edit({
-                                            embeds : [memberMessageEmbed
+                                            embeds : [embed
                                                 .setColor('#dc661f')
                                                 .setImage(message.attachments.first().url)
                                                 ],
@@ -285,7 +286,7 @@ module.exports = {
                                     )
                                     .catch(
                                         console.error,
-                                        message.channel.send({embeds : [memberMessageEmbed
+                                        message.channel.send({embeds : [embed
                                             .setTitle("Not a valid argument.")
                                             .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
                                             ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
@@ -297,7 +298,7 @@ module.exports = {
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
                                 .then(msg => 
                                     msg.edit({
-                                        embeds : [memberMessageEmbed
+                                        embeds : [embed
                                             .setTitle(title)
                                             .setColor('#dc661f')
                                         ],
@@ -306,7 +307,7 @@ module.exports = {
                                 )
                                 .catch(
                                     console.error,
-                                    message.channel.send({embeds : [memberMessageEmbed
+                                    message.channel.send({embeds : [embed
                                         .setTitle("Not a valid argument.")
                                         .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
                                         ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
