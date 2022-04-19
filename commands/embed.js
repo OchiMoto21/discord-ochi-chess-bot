@@ -105,7 +105,7 @@ module.exports = {
                                                 }
                                                 console.log(m.length);
                                                 console.log(m);
-                                                if (!m.length == 0 && m.length/2 <= 5){
+                                                if (!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
                                                     for (var j = 1; j <= (m.length)/2; ++j) {
                                                         iWantButtonsDaddy[j] = new Discord.MessageButton()
                                                         .setLabel(m[j*2-2])
@@ -117,7 +117,7 @@ module.exports = {
                                                         iWantButtonsDaddy
                                                     );
                                                 }
-                                                if(!m.length == 0 && m.length/2 <= 5){
+                                                if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
                                                     if (image_state){
                                                         console.log("Testing button only");
                                                         message.channel.send({
@@ -259,20 +259,13 @@ module.exports = {
                                     .then(msg => 
                                         msg.edit({
                                             embeds : [embed
-                                                .setTitle(title)
+                                                .setTitle(title.slice(6))
                                                 .setColor('#dc661f')
                                                 .setImage(message.attachments.first().url)
                                                 ],
                                             components: [row]
                                         })
                                     )
-                                    .catch(
-                                        console.error,
-                                        message.channel.send({embeds : [new Discord.MessageEmbed()
-                                            .setTitle("Not a valid argument.")
-                                            .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
-                                            ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
-                                    );
                             } else {
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
                                     .then(msg => 
@@ -284,13 +277,6 @@ module.exports = {
                                             components: [row]
                                         })
                                     )
-                                    .catch(
-                                        console.error,
-                                        message.channel.send({embeds : [new Discord.MessageEmbed()
-                                            .setTitle("Not a valid argument.")
-                                            .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
-                                            ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
-                                    );
                             }
                                 message.delete()
                         } else {
@@ -299,19 +285,12 @@ module.exports = {
                                 .then(msg => 
                                     msg.edit({
                                         embeds : [embed
-                                            .setTitle(title)
+                                            .setTitle(title.slice(6))
                                             .setColor('#dc661f')
                                         ],
                                         components: [row]
                                     })
                                 )
-                                .catch(
-                                    console.error,
-                                    message.channel.send({embeds : [new Discord.MessageEmbed()
-                                        .setTitle("Not a valid argument.")
-                                        .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
-                                        ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
-                                );
                             }
                             else{
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
@@ -320,13 +299,6 @@ module.exports = {
                                         components: [row]
                                     })
                                 )
-                                .catch(
-                                    console.error,
-                                    message.channel.send({embeds : [new Discord.MessageEmbed()
-                                        .setTitle("Not a valid argument.")
-                                        .setDescription("False message ID or channel ID.\nThis message will be deleted in 10 seconds.")
-                                        ]}).then(msg => {setTimeout(() => msg.delete(), 10000)})
-                                );
                             }
                             message.delete()
                         }
