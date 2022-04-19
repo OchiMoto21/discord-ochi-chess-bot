@@ -18,7 +18,7 @@ module.exports = {
 
                         const webhooks = message.channel.fetchWebhooks();
                         const webhook = webhooks.find(wh => wh.token);
-                
+                        console.log(webhook);
                         if (!webhook) {
                             return console.log('No webhook was found that I can use!');
                         }
@@ -38,7 +38,6 @@ module.exports = {
                             webhook.send({
                                 content: 'Webhook test',
                                 username: m[1],
-                                avatarURL: 'https://pbs.twimg.com/profile_images/1497485326713245698/AJV3_P6N_400x400.jpg',
                                 embeds: [memberMessageEmbed
                                     .setColor('#dc661f')
                                     .setImage(message.attachments.first().url)],
@@ -48,7 +47,6 @@ module.exports = {
                             webhook.send({
                                 content: 'Webhook test',
                                 username: m[1],
-                                avatarURL: 'https://pbs.twimg.com/profile_images/1497485326713245698/AJV3_P6N_400x400.jpg',
                                 embeds: [memberMessageEmbed
                                     .setTitle("There's no picture. Daijoubuka?")
                                     .setDescription("This message will be deleted in 10 seconds.")
