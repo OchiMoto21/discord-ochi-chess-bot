@@ -46,7 +46,7 @@ module.exports = {
                                                 m.shift();
                                                 console.log(m.length);
                                                 console.log(m);
-                                                if (!m.length == 0 && !m.length > 5){
+                                                if (!m.length == 0 && !m.length > 10){
                                                     for (var j = 1; j <= (m.length)/2; ++j) {
                                                         iWantButtonsDaddy[j] = new Discord.MessageButton()
                                                         .setLabel(m[j*2-2])
@@ -58,7 +58,7 @@ module.exports = {
                                                         iWantButtonsDaddy
                                                     );
                                                 }
-                                                if (!m.length == 0 && !m.length > 5){
+                                                if (!m.length == 0 && !m.length > 10){
                                                     if (image_state){
                                                         message.channel.send({
                                                             embeds : [embed
@@ -105,7 +105,7 @@ module.exports = {
                                                 }
                                                 console.log(m.length);
                                                 console.log(m);
-                                                if (!m.length == 0 && !m.length > 5){
+                                                if (!m.length == 0 && !m.length > 10){
                                                     for (var j = 1; j <= (m.length)/2; ++j) {
                                                         iWantButtonsDaddy[j] = new Discord.MessageButton()
                                                         .setLabel(m[j*2-2])
@@ -117,7 +117,7 @@ module.exports = {
                                                         iWantButtonsDaddy
                                                     );
                                                 }
-                                                if(!m.length == 0 && !m.length > 5){
+                                                if(!m.length == 0 && !m.length > 10){
                                                     if (image_state){
                                                         console.log("Testing button only");
                                                         message.channel.send({
