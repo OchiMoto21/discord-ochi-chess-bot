@@ -16,9 +16,33 @@ module.exports = {
                             console.log("Yes, there's an attachemnt");
                             return request(message.attachments.first().url, 
                                 function (error, response, body) {
-                                    console.error('error:', error); // Print the error if one occurred
-                                    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                                    console.log('body:', body); // Print the HTML for the Google homepage.
+                                    console.error('error:', error); 
+                                    console.log('statusCode:', response && response.statusCode); 
+                                    console.log('body:', body);
+                                    const str = body.trim().split('\n');
+                                    for(var i = 0; i < body.length; ++i){
+                                        m = str[i].join(" ").split(',');
+                                        console.log(m.length);
+                                        for (var i = 1; i <= (m.length-1)/2; ++i) {
+                                            iWantButtonsDaddy[i] = new Discord.MessageButton()
+                                            .setLabel(m[i*2-1])
+                                            .setStyle('LINK')
+                                            .setURL(m[i*2])
+                                        }
+                                        
+                                        const row = new Discord.MessageActionRow()
+                                        .addComponents(
+                                            iWantButtonsDaddy
+                                        );
+                                        message.channel.send({
+                                            embeds : [memberMessageEmbed
+                                                .setColor('#dc661f')
+                                                .setImage(m[0])
+                                                ],
+                                            components: [row]
+                                        })
+                                        message.delete()
+                                    }
                             });
                         }
                     } else {
