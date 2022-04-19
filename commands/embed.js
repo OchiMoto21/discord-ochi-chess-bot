@@ -1,5 +1,6 @@
 // const regex = /([^,]+)/gm;
-const fetch = require('node-fetch');
+const request = require('request');
+
 module.exports = {
     name: 'embed',
     aliases: ['edit'],
@@ -13,19 +14,12 @@ module.exports = {
                     if (!args.length){
                         if(message.attachments.size === 1){
                             console.log("Yes, there's an attachemnt");
-                            response = fetch(message.attachments.first()?.url);
-
-                            if(!response){
-                                return message.channel.send({embeds : [memberMessageEmbed
-                                    .setTitle("There's an error in fetching the file.")
-                                    .setDescription("This message will be deleted in 10 seconds.")
-                                    ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                
-                            }
-                            
-                            const text = response.text();
-                            console.log(text);
-                            
+                            request(message.attachments.first().url, 
+                                function (error, response, body) {
+                                    console.error('error:', error); // Print the error if one occurred
+                                    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                                    console.log('body:', body); // Print the HTML for the Google homepage.
+                            });
                         }
                     } else {
                         return message.channel.send({embeds : [memberMessageEmbed
