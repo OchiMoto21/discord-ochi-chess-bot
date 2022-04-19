@@ -16,7 +16,7 @@ module.exports = {
                     console.log(m);
                     if (m[0]="webhook"){
 
-                        const webhooks = await channel.fetchWebhooks();
+                        const webhooks = message.channel.fetchWebhooks();
                         const webhook = webhooks.find(wh => wh.token);
                 
                         if (!webhook) {
