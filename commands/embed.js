@@ -21,7 +21,7 @@ module.exports = {
                                     console.log('body:', body);
                                     const str = body.trim().split('\n');
                                     for(var i = 0; i < body.length; ++i){
-                                        m = str[i].join(" ").split(',');
+                                        m = str[i].split(',');
                                         console.log(m.length);
                                         for (var i = 1; i <= (m.length-1)/2; ++i) {
                                             iWantButtonsDaddy[i] = new Discord.MessageButton()
