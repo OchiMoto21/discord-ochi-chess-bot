@@ -1,4 +1,5 @@
 // const regex = /([^,]+)/gm;
+const fetch = require('node-fetch');
 module.exports = {
     name: 'embed',
     aliases: ['edit'],
@@ -9,55 +10,35 @@ module.exports = {
         
             if(cmd === 'embed'){
                 try {
-                    if (!args.length) return message.channel.send("There's no argument D:");
+                    if (!args.length){
+                        if(message.attachments.size === 1){
+                            if (message.attachments.first().url.endsWith(".txt")){
+                                response = fetch(message.attachments.first().url)
+
+                                if(!file){
+                                    message.channel.send({embeds : [memberMessageEmbed
+                                        .setTitle("There's an error in fetching the file.")
+                                        .setDescription("This message will be deleted in 10 seconds.")
+                                        ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                    
+                                }
+                                
+                                const text = response.text();
+                                console.log(text);
+                            }
+                        }
+                    } else {
+                        return message.channel.send({embeds : [memberMessageEmbed
+                            .setTitle("Not a valid argument.")
+                            .setDescription("This message will be deleted in 10 seconds.")
+                            ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                    }
                     var iWantButtonsDaddy = [];
                             
                     const m = args.join(" ").split(',');
                     console.log(m);
-                    if (m[0].startsWith("webhook.")){
-                        hook = m[0].slice(-(m[0].length-41)).split("/");
-                        const webhookClient = new Discord.WebhookClient({ id: hook[0], token: hook[1] });
-
-                        // //webhook.https://discord.com/api/webhooks/965809264734134312/Vx3MY8BYOBCILjbRhfpj4qoMUFdPBD8K84U0hzDwlQKFnnYrth86o2hyS6SrDfWDwurk
-                        // if (!webhook) {
-                        //     return console.log('No webhook was found that I can use!');
-                        // }
                         
-                        for (var i = 1; i < m.length/2; ++i) {
-                            iWantButtonsDaddy[i] = new Discord.MessageButton()
-                            .setLabel(m[i*2])
-                            .setStyle('LINK')
-                            .setURL(m[i*2+1])
-                        }
-                        
-                        const row = new Discord.MessageActionRow()
-                        .addComponents(
-                            iWantButtonsDaddy
-                        );
-                        if (message.attachments.size === 1){
-                            webhookClient.send({
-                                content: 'Webhook test',
-                                username: m[1],
-                                embeds: [memberMessageEmbed
-                                    .setColor('#dc661f')
-                                    .setImage(message.attachments.first().url)],
-                                components: [row]
-                            });
-                        } else {
-                            webhookClient.send({
-                                content: 'Webhook test',
-                                username: m[1],
-                                embeds: [memberMessageEmbed
-                                    .setTitle("There's no picture. Daijoubuka?")
-                                    .setDescription("This message will be deleted in 10 seconds.")
-                                    ],
-                            })
-                            .then(msg => {setTimeout(() => msg.delete(), 10000)});
-                            webhookClient.send({
-                                components: [row]
-                            });
-                        }
-                    } else if (m[0]!="webhook.yes" && m.length % 2 == 0){
+                    if (m.length % 2 == 0){
                         console.log(m.length);
                         for (var i = 1; i <= m.length/2; ++i) {
                             iWantButtonsDaddy[i] = new Discord.MessageButton()
