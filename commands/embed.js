@@ -13,9 +13,9 @@ module.exports = {
                     if (!args.length){
                         if(message.attachments.size === 1){
                             if (message.attachments.first().url.endsWith(".txt")){
-                                response = fetch(message.attachments.first().url)
+                                response = fetch(message.attachments.first().url);
 
-                                if(!file){
+                                if(!response){
                                     message.channel.send({embeds : [memberMessageEmbed
                                         .setTitle("There's an error in fetching the file.")
                                         .setDescription("This message will be deleted in 10 seconds.")
@@ -29,7 +29,7 @@ module.exports = {
                         }
                     } else {
                         return message.channel.send({embeds : [memberMessageEmbed
-                            .setTitle("Not a valid argument.")
+                            .setTitle("There's no attachement.")
                             .setDescription("This message will be deleted in 10 seconds.")
                             ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                     }
