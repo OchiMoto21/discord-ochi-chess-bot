@@ -13,7 +13,7 @@ module.exports = {
                     if (!args.length){
                         if(message.attachments.size === 1){
                             console.log("Yes, there's an attachemnt");
-                            response = fetch(message.attachments.first().url);
+                            response = fetch(message.attachments.first()?.url);
 
                             if(!response){
                                 return message.channel.send({embeds : [memberMessageEmbed
