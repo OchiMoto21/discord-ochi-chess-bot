@@ -7,7 +7,6 @@
     "node": "16.x",
     "npm": "7.x"
   },
-
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,7 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "chess.js": "^0.12.0",
-    "discord.js": "^13.1.0"
+    "discord.js": "^13.1.0",
+    "node-fetch": "^2.6.7"
   },
   "resolutions": {
     "minimist": "1.2.6"
