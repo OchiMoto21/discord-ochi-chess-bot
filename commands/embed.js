@@ -14,14 +14,14 @@ module.exports = {
                             
                     const m = args.join(" ").split(',');
                     console.log(m);
-                    if (m[0]=="webhook.yes"){
+                    if (m[0].startsWith("webhook.")){
+                        hook = m[0].slice(-(m[0].length-41)).split("/");
+                        const webhookClient = new Discord.WebhookClient({ id: hook[0], token: hook[1] });
 
-                        const webhooks = message.channel.fetchWebhooks();
-                        const webhook = webhooks.find(wh => wh.token);
-                        console.log(webhook);
-                        if (!webhook) {
-                            return console.log('No webhook was found that I can use!');
-                        }
+                        // //webhook.https://discord.com/api/webhooks/965809264734134312/Vx3MY8BYOBCILjbRhfpj4qoMUFdPBD8K84U0hzDwlQKFnnYrth86o2hyS6SrDfWDwurk
+                        // if (!webhook) {
+                        //     return console.log('No webhook was found that I can use!');
+                        // }
                         
                         for (var i = 1; i < m.length/2; ++i) {
                             iWantButtonsDaddy[i] = new Discord.MessageButton()
@@ -35,7 +35,7 @@ module.exports = {
                             iWantButtonsDaddy
                         );
                         if (message.attachments.size === 1){
-                            webhook.send({
+                            webhookClient.send({
                                 content: 'Webhook test',
                                 username: m[1],
                                 embeds: [memberMessageEmbed
@@ -44,7 +44,7 @@ module.exports = {
                                 components: [row]
                             });
                         } else {
-                            webhook.send({
+                            webhookClient.send({
                                 content: 'Webhook test',
                                 username: m[1],
                                 embeds: [memberMessageEmbed
@@ -53,7 +53,7 @@ module.exports = {
                                     ],
                             })
                             .then(msg => {setTimeout(() => msg.delete(), 10000)});
-                            webhook.send({
+                            webhookClient.send({
                                 components: [row]
                             });
                         }
