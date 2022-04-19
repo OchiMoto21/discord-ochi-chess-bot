@@ -14,7 +14,7 @@ module.exports = {
                             
                     const m = args.join(" ").split(',');
                     console.log(m);
-                    if (m[0]="webhook"){
+                    if (m[0]=="webhook.yes"){
 
                         const webhooks = message.channel.fetchWebhooks();
                         const webhook = webhooks.find(wh => wh.token);
@@ -57,8 +57,7 @@ module.exports = {
                                 components: [row]
                             });
                         }
-                    }
-                    if(m.length % 2 == 0){
+                    } else if (m[0]!="webhook.yes" && m.length % 2 == 0){
                         console.log(m.length);
                         for (var i = 1; i <= m.length/2; ++i) {
                             iWantButtonsDaddy[i] = new Discord.MessageButton()
