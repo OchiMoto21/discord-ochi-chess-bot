@@ -9,17 +9,57 @@ module.exports = {
         
             if(cmd === 'embed'){
                 try {
-
-                    // if (args.length === 2) return message.channel.send(args[0] +" "+args[1]);
                     if (!args.length) return message.channel.send("There's no argument D:");
                     var iWantButtonsDaddy = [];
-                    
-        
-                    // Alternative syntax using RegExp constructor
-                    // const regex = new RegExp('([^,]+)', 'gm')
-        
+                            
                     const m = args.join(" ").split(',');
                     console.log(m);
+                    if (m[0]="webhook"){
+
+                        const webhooks = await channel.fetchWebhooks();
+                        const webhook = webhooks.find(wh => wh.token);
+                
+                        if (!webhook) {
+                            return console.log('No webhook was found that I can use!');
+                        }
+                        
+                        for (var i = 1; i < m.length/2; ++i) {
+                            iWantButtonsDaddy[i] = new Discord.MessageButton()
+                            .setLabel(m[i*2])
+                            .setStyle('LINK')
+                            .setURL(m[i*2+1])
+                        }
+                        
+                        const row = new Discord.MessageActionRow()
+                        .addComponents(
+                            iWantButtonsDaddy
+                        );
+                        if (message.attachments.size === 1){
+                            webhook.send({
+                                content: 'Webhook test',
+                                username: m[1],
+                                avatarURL: 'https://media.discordapp.net/attachments/823129376068599830/965558750746390528/Ninja_2.png?width=701&height=701',
+                                embeds: [memberMessageEmbed
+                                    .setColor('#dc661f')
+                                    .setImage(message.attachments.first().url)],
+                                components: [row]
+                            });
+                        } else {
+                            webhook.send({
+                                content: 'Webhook test',
+                                username: m[1],
+                                avatarURL: 'https://media.discordapp.net/attachments/823129376068599830/965558750746390528/Ninja_2.png?width=701&height=701',
+                                embeds: [memberMessageEmbed
+                                    .setTitle("There's no picture. Daijoubuka?")
+                                    .setDescription("This message will be deleted in 10 seconds.")
+                                    ],
+                            })
+                            .then(msg => {setTimeout(() => msg.delete(), 10000)});
+                            webhook.send({
+                                components: [row]
+                            });
+                        }
+                    }
                     if(m.length % 2 == 0){
                         console.log(m.length);
                         for (var i = 1; i <= m.length/2; ++i) {
