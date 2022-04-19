@@ -13,20 +13,19 @@ module.exports = {
                     if (!args.length){
                         if(message.attachments.size === 1){
                             console.log("Yes, there's an attachemnt");
-                            if (String(message.attachments.first().url).endsWith(".txt")){
-                                response = fetch(message.attachments.first().url);
+                            response = fetch(message.attachments.first().url);
 
-                                if(!response){
-                                    return message.channel.send({embeds : [memberMessageEmbed
-                                        .setTitle("There's an error in fetching the file.")
-                                        .setDescription("This message will be deleted in 10 seconds.")
-                                        ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                    
-                                }
+                            if(!response){
+                                return message.channel.send({embeds : [memberMessageEmbed
+                                    .setTitle("There's an error in fetching the file.")
+                                    .setDescription("This message will be deleted in 10 seconds.")
+                                    ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                                 
-                                const text = response.text();
-                                console.log(text);
                             }
+                            
+                            const text = response.text();
+                            console.log(text);
+                            
                         }
                     } else {
                         return message.channel.send({embeds : [memberMessageEmbed
