@@ -34,11 +34,12 @@ module.exports = {
                                             
                                             var m = String(str[i]).split(',');
                                             
-                                            console.log(str[i]);
+                                            console.log(m);
                                             console.log(m.length);
                                             
                                             var image_state = !(m[0].startsWith("image.no"));
                                             var title_state = m[1].startsWith("title.");
+                                            console.log(image_state,title_state);
                                             
                                             if (image_state){
                                                 var image = m[0];
