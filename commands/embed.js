@@ -50,8 +50,6 @@ module.exports = {
                                             if(title_state){
                                                 var title = m[0];
                                                 m.shift();
-                                            } else {
-                                                m.shift();
                                             }
                                             console.log(m.length);
                                             console.log(m);
