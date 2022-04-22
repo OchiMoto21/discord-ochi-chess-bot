@@ -57,7 +57,7 @@ module.exports = {
                                             
                                             var one_row = (!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0);
                                             var multiple_row = (!m.length == 0 && m[m.length-1].startsWith("columns.") && (m.length-1) % 2 == 0);
-                                            
+                                            console.log(one_row, multiple_row)
                                             if (one_row){
                                                 for (var j = 1; j <= (m.length)/2; ++j) {
                                                     buttoArray[j] = new Discord.MessageButton()
@@ -91,7 +91,7 @@ module.exports = {
                                                     return
                                                 }
                                             }
-                                            console.log('row:',row);
+
 
                                             if (multiple_row || one_row) {
                                                 if (image_state && title_state){
