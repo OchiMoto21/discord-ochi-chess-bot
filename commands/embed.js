@@ -33,15 +33,15 @@ module.exports = {
                                             var image = "";
                                             
                                             var m = String(str[i]).split(delimiter);
-                                            
-                                            var image_state = !(m[0].startsWith("image.no"));
-                                            if (image_state){
-                                                var image = m[0];
-                                                m.shift();
-                                            } else {
-                                                m.shift();
+                                            if (!m.length == 0){
+                                                var image_state = !(m[0].startsWith("image.no"));
+                                                if (image_state){
+                                                    var image = m[0];
+                                                    m.shift();
+                                                } else {
+                                                    m.shift();
+                                                }
                                             }
-
                                             if (!m.length == 0){
                                                 var title_state = m[0].startsWith("title.");
                                                 if(title_state){
@@ -176,10 +176,12 @@ module.exports = {
                         const m = args.join(" ").split(delimiter);
                         var title = ""; 
                         var description_state = false;
-                        var title_state = m[0].startsWith("title.");
-                        if (title_state){
-                            var title = m[0];
-                            m.shift();
+                        if (!m.length == 0){
+                            var title_state = m[0].startsWith("title.");
+                            if (title_state){
+                                var title = m[0];
+                                m.shift();
+                            }
                         }
                         if (!m.length == 0){
                         var description_state = m[0].startsWith("description.");
@@ -348,12 +350,14 @@ module.exports = {
                     var messageID = m[1];
                     m.shift();
                     m.shift();
-                    var title_state = m[0].startsWith("title.");
-                    var description_state = false;
-                    if (title_state){
-                        var title = m[0];
-                        m.shift();
+                    if (!m.length == 0){
+                        var title_state = m[0].startsWith("title.");
+                        var description_state = false;
+                        if (title_state){
+                            var title = m[0];
+                            m.shift();
 
+                        }
                     }
 
                     if (!m.length == 0){
@@ -363,8 +367,7 @@ module.exports = {
                             m.shift();
                         }
                     }
-
-
+                
                     if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
                         for (var j = 1; j <= (m.length)/2; ++j) {
                             buttoArray[j] = new Discord.MessageButton()
@@ -481,6 +484,7 @@ module.exports = {
                         }
                     } else {
                         if (message.attachments.size === 1){
+                            console.log('destination');
                             if(description_state && title_state) {
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
                                     .then(msg => 
@@ -506,8 +510,7 @@ module.exports = {
                                                 .setTitle(title.slice(6))
                                                 .setColor('#dc661f')
                                                 .setImage(message.attachments.first().url)
-                                                ],
-                                                components: []
+                                                ]
                                         })
                                     }
                                     );
@@ -521,8 +524,7 @@ module.exports = {
                                                     .setDescription(description.slice(12))
                                                     .setColor('#dc661f')
                                                     .setImage(message.attachments.first().url)
-                                                    ],
-                                                components: []
+                                                    ]
                                             })
                                         }
                                         )
@@ -534,8 +536,7 @@ module.exports = {
                                             embeds : [embed
                                                 .setColor('#dc661f')
                                                 .setImage(message.attachments.first().url)
-                                                ],
-                                            components: []
+                                                ]
 
                                         })
                                     }
@@ -552,8 +553,7 @@ module.exports = {
                                                 .setTitle(title.slice(6))
                                                 .setDescription(description.slice(12))
                                                 .setColor('#dc661f')
-                                                ],
-                                            components: []
+                                                ]
                                         })
                                     })
                             } else if (title_state){
