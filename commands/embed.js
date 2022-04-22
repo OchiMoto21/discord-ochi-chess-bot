@@ -338,7 +338,7 @@ module.exports = {
             }
             if(cmd === 'edit'){
                 try {
-                    if (!args.length) return message.channel.send("There's no argument D:");
+                    if (!args.length && !(message.attachments.size === 1)) return message.channel.send("There's no argument D:");
                     var buttoArray = [];
                     var embed = new Discord.MessageEmbed();
                     const m = args.join(" ").split(delimiter);
