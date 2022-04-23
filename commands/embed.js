@@ -190,13 +190,14 @@ module.exports = {
                                 m.shift();
                             }
                         }
+                        console.log(m);
                         if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
 
-                            for (var j = 1; j <= (m.length)/2; ++j) {
+                            for (var j = 0; j < (m.length)/2; j+=2) {
                                 buttoArray[j] = new Discord.MessageButton()
-                                .setLabel(m[j*2-2])
+                                .setLabel(m[j])
                                 .setStyle('LINK')
-                                .setURL(m[j*2-1])
+                                .setURL(m[j+1])
                             }
                             
                             var row = new Discord.MessageActionRow()
