@@ -190,14 +190,50 @@ module.exports = {
                                 m.shift();
                             }
                         }
+                        const regex = /^<:(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
+
                         console.log(m);
                         if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
-                            for (var j = 0; j < (m.length)/2; j+=2) {
-                                buttoArray.push(new Discord.MessageButton()
-                                .setLabel(m[j])
-                                .setStyle('LINK')
-                                .setURL(m[j+1])
-                                )
+                            console.log(regex);
+
+                            for (var j = 0; j < (m.length); j += 2) {
+                                var bool = regex.test(m[j]);
+                                console.log(bool);
+                                
+                                if (m[j].length > 80 && !(regex.test(m[j]))){
+                                    return message.channel.send({
+                                        embeds : [embed
+                                            .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters humu')
+                                            .setColor('#dc661f')
+                                        ]
+                                    }).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                } else if (regex.test(m[j])){
+                                    var groups = m[j].match(regex).groups;
+                                    if(!(groups.buttonLabel.length > 80)){
+                                        buttoArray.push(new Discord.MessageButton()
+                                            .setLabel(groups.buttonLabel)
+                                            .setStyle('LINK')
+                                            .setURL(m[j+1])
+                                            .setEmoji(groups.emojiID)
+                                            )                                
+                                    } else {
+    
+                                        return message.channel.send({
+                                            embeds : [embed
+                                                .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters')
+                                                .setColor('#dc661f')
+                                            ]
+                                        }).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                    }
+                                } else {
+                                    
+                                    buttoArray.push(new Discord.MessageButton()
+                                        .setLabel(m[j])
+                                        .setStyle('LINK')
+                                        .setURL(m[j+1])
+                                        )
+                                }
+                                
                             }
                             
                             var row = new Discord.MessageActionRow()
@@ -369,13 +405,47 @@ module.exports = {
                         }
                     }
                 
+                    const regex = /^<:(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
                     if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
-                        for (var j = 0; j < (m.length)/2; j += 2) {
-                            buttoArray.push(new Discord.MessageButton()
-                                .setLabel(m[j])
-                                .setStyle('LINK')
-                                .setURL(m[j+1])
-                                )
+                        console.log(regex);
+                        for (var j = 0; j < (m.length); j += 2) {
+                            var bool = regex.test(m[j]);
+                            console.log(bool);
+                            
+                            if (m[j].length > 80 && !(regex.test(m[j]))){
+                                return message.channel.send({
+                                    embeds : [embed
+                                        .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters humu')
+                                        .setColor('#dc661f')
+                                    ]
+                                }).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                            } else if (regex.test(m[j])){
+                                var groups = m[j].match(regex).groups;
+                                if(!(groups.buttonLabel.length > 80)){
+                                    buttoArray.push(new Discord.MessageButton()
+                                        .setLabel(groups.buttonLabel)
+                                        .setStyle('LINK')
+                                        .setURL(m[j+1])
+                                        .setEmoji(groups.emojiID)
+                                        )                                
+                                } else {
+
+                                    return message.channel.send({
+                                        embeds : [embed
+                                            .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters')
+                                            .setColor('#dc661f')
+                                        ]
+                                    }).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                }
+                            } else {
+                                
+                                buttoArray.push(new Discord.MessageButton()
+                                    .setLabel(m[j])
+                                    .setStyle('LINK')
+                                    .setURL(m[j+1])
+                                    )
+                            }
+                            
                         }
                         
                         var row = new Discord.MessageActionRow()
