@@ -193,177 +193,188 @@ module.exports = {
                         const regex = /^<:(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
 
                         console.log(m);
-                        if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
-                            console.log(regex);
+                        try {
+                            if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
+                                console.log(regex);
 
-                            for (var j = 0; j < (m.length); j += 2) {
-                                var bool = regex.test(m[j]);
-                                console.log(bool);
-                                
-                                if (m[j].length > 80 && !(regex.test(m[j]))){
-                                    return message.channel.send({
-                                        embeds : [embed
-                                            .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters humu')
-                                            .setColor('#dc661f')
-                                        ]
-                                    }).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                } else if (regex.test(m[j])){
-                                    var groups = m[j].match(regex).groups;
-                                    if(!(groups.buttonLabel.length > 80)){
-                                        buttoArray.push(new Discord.MessageButton()
-                                            .setLabel(groups.buttonLabel)
-                                            .setStyle('LINK')
-                                            .setURL(m[j+1])
-                                            .setEmoji(groups.emojiID)
-                                            )                                
-                                    } else {
-    
+                                for (var j = 0; j < (m.length); j += 2) {
+                                    var bool = regex.test(m[j]);
+                                    console.log(bool);
+                                    
+                                    if (m[j].length > 80 && !(regex.test(m[j]))){
                                         return message.channel.send({
                                             embeds : [embed
-                                                .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters')
+                                                .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters humu')
                                                 .setColor('#dc661f')
                                             ]
                                         }).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                    } else if (regex.test(m[j])){
+                                        var groups = m[j].match(regex).groups;
+                                        if(!(groups.buttonLabel.length > 80)){
+                                            buttoArray.push(new Discord.MessageButton()
+                                                .setLabel(groups.buttonLabel)
+                                                .setStyle('LINK')
+                                                .setURL(m[j+1].trim())
+                                                .setEmoji(groups.emojiID)
+                                                )                                
+                                        } else {
+        
+                                            return message.channel.send({
+                                                embeds : [embed
+                                                    .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters')
+                                                    .setColor('#dc661f')
+                                                ]
+                                            }).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                        }
+                                    } else {
+                                        
+                                        buttoArray.push(new Discord.MessageButton()
+                                            .setLabel(m[j])
+                                            .setStyle('LINK')
+                                            .setURL(m[j+1].trim())
+                                            )
                                     }
-                                } else {
                                     
-                                    buttoArray.push(new Discord.MessageButton()
-                                        .setLabel(m[j])
-                                        .setStyle('LINK')
-                                        .setURL(m[j+1])
-                                        )
+                                }
+                                
+                                var row = new Discord.MessageActionRow()
+                                .addComponents(
+                                    buttoArray
+                                );
+                                console.log(buttoArray);
+                                if (message.attachments.size === 1){
+                                    if(description_state && title_state) {
+                                        message.channel.send({
+                                                    embeds : [embed
+                                                        .setTitle(title.slice(6))
+                                                        .setDescription(description.slice(12))
+                                                        .setColor('#dc661f')
+                                                        .setImage(message.attachments.first().url)
+                                                        ],
+                                                    components: [row]
+                                                })
+                                    } else if (title_state) {
+                                        message.channel.send({
+                                                    embeds : [embed
+                                                        .setTitle(title.slice(6))
+                                                        .setColor('#dc661f')
+                                                        .setImage(message.attachments.first().url)
+                                                        ],
+                                                    components: [row]
+                                                })
+                                            
+                                    } else {
+                                        message.channel.send({
+                                                    embeds : [embed
+                                                        .setColor('#dc661f')
+                                                        .setImage(message.attachments.first().url)
+                                                        ],
+                                                    components: [row]
+                                                })
+                                            
+                                    }
+                                        message.delete()
+                                } else {
+                                    if(description_state && title_state) {
+                                        message.channel.send({
+                                                    embeds : [embed
+                                                        .setTitle(title.slice(6))
+                                                        .setDescription(description.slice(12))
+                                                        .setColor('#dc661f')
+                                                        ],
+                                                    components: [row]
+                                                })
+                                            
+                                    } else if (title_state){
+                                        console.log('destination');
+
+                                        message.channel.send({
+                                                embeds : [embed
+                                                    .setTitle(title.slice(6))
+                                                    .setColor('#dc661f')
+                                                ],
+                                                components: [row]
+                                            })
+                                        
+                                    } else {
+                                        message.channel.send({
+                                                components: [row]
+                                            })
+                                        
+                                    }
+                                        message.delete()
+                                }
+                            } else {
+                                if (message.attachments.size === 1){
+                                    if(description_state && title_state) {
+                                        message.channel.send({
+                                                    embeds : [embed
+                                                        .setTitle(title.slice(6))
+                                                        .setDescription(description.slice(12))
+                                                        .setColor('#dc661f')
+                                                        .setImage(message.attachments.first().url)
+                                                        ],
+                                                    components: []
+                                                }
+                                                )
+                                            
+                                    } else if (title_state) {
+                                        message.channel.send({
+                                                    embeds : [embed
+                                                        .setTitle(title.slice(6))
+                                                        .setColor('#dc661f')
+                                                        .setImage(message.attachments.first().url)
+                                                        ],
+                                                        components: []
+                                                })
+                                    } else {
+                                        message.channel.send({
+                                                    embeds : [embed
+                                                        .setColor('#dc661f')
+                                                        .setImage(message.attachments.first().url)
+                                                        ],
+                                                    components: []
+        
+                                                })
+        
+                                    }
+                                        message.delete()
+                                } else {
+                                    if(description_state && title_state) {
+                                        message.channel.send({
+                                                    embeds : [embed
+                                                        .setTitle(title.slice(6))
+                                                        .setDescription(description.slice(12))
+                                                        .setColor('#dc661f')
+                                                        ],
+                                                    components: []
+                                                })
+        
+                                    } else if (title_state){
+                                        message.channel.send({
+                                                embeds : [embed
+                                                    .setTitle(title.slice(6))
+                                                    .setColor('#dc661f')
+                                                ],
+                                                components: []
+                                            })
+        
+                                    }
+                                    else {
+                                        message.delete()
+                                        return;
+                                    }
+                                    message.delete()
                                 }
                                 
                             }
-                            
-                            var row = new Discord.MessageActionRow()
-                            .addComponents(
-                                buttoArray
-                            );
-                            console.log(buttoArray);
-                            if (message.attachments.size === 1){
-                                if(description_state && title_state) {
-                                    message.channel.send({
-                                                embeds : [embed
-                                                    .setTitle(title.slice(6))
-                                                    .setDescription(description.slice(12))
-                                                    .setColor('#dc661f')
-                                                    .setImage(message.attachments.first().url)
-                                                    ],
-                                                components: [row]
-                                            })
-                                } else if (title_state) {
-                                    message.channel.send({
-                                                embeds : [embed
-                                                    .setTitle(title.slice(6))
-                                                    .setColor('#dc661f')
-                                                    .setImage(message.attachments.first().url)
-                                                    ],
-                                                components: [row]
-                                            })
-                                        
-                                } else {
-                                    message.channel.send({
-                                                embeds : [embed
-                                                    .setColor('#dc661f')
-                                                    .setImage(message.attachments.first().url)
-                                                    ],
-                                                components: [row]
-                                            })
-                                        
-                                }
-                                    message.delete()
-                            } else {
-                                if(description_state && title_state) {
-                                    message.channel.send({
-                                                embeds : [embed
-                                                    .setTitle(title.slice(6))
-                                                    .setDescription(description.slice(12))
-                                                    .setColor('#dc661f')
-                                                    ],
-                                                components: [row]
-                                            })
-                                        
-                                } else if (title_state){
-                                    message.channel.send({
-                                            embeds : [embed
-                                                .setTitle(title.slice(6))
-                                                .setColor('#dc661f')
-                                            ],
-                                            components: [row]
-                                        })
-                                    
-                                } else {
-                                    message.channel.send({
-                                            components: [row]
-                                        })
-                                    
-                                }
-                                    message.delete()
-                            }
-                        } else {
-                            if (message.attachments.size === 1){
-                                if(description_state && title_state) {
-                                    message.channel.send({
-                                                embeds : [embed
-                                                    .setTitle(title.slice(6))
-                                                    .setDescription(description.slice(12))
-                                                    .setColor('#dc661f')
-                                                    .setImage(message.attachments.first().url)
-                                                    ],
-                                                components: []
-                                            }
-                                            )
-                                        
-                                } else if (title_state) {
-                                    message.channel.send({
-                                                embeds : [embed
-                                                    .setTitle(title.slice(6))
-                                                    .setColor('#dc661f')
-                                                    .setImage(message.attachments.first().url)
-                                                    ],
-                                                    components: []
-                                            })
-                                } else {
-                                    message.channel.send({
-                                                embeds : [embed
-                                                    .setColor('#dc661f')
-                                                    .setImage(message.attachments.first().url)
-                                                    ],
-                                                components: []
-    
-                                            })
-    
-                                }
-                                    message.delete()
-                            } else {
-                                if(description_state && title_state) {
-                                    message.channel.send({
-                                                embeds : [embed
-                                                    .setTitle(title.slice(6))
-                                                    .setDescription(description.slice(12))
-                                                    .setColor('#dc661f')
-                                                    ],
-                                                components: []
-                                            })
-    
-                                } else if (title_state){
-                                    message.channel.send({
-                                            embeds : [embed
-                                                .setTitle(title.slice(6))
-                                                .setColor('#dc661f')
-                                            ],
-                                            components: []
-                                        })
-    
-                                }
-                                else {
-                                    message.delete()
-                                    return;
-                                }
-                                message.delete()
-                            }
-                            
+                        } catch {
+                            console.error;
+                            message.delete();
+                            message.channel.send({embeds : [embed
+                                .setTitle("Not a valid argument.")
+                                .setDescription("This message will be deleted in 10 seconds.")
+                                ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                         }
                     }
                 } catch {
@@ -408,6 +419,7 @@ module.exports = {
                     const regex = /^<:(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
                     if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
                         console.log(regex);
+
                         for (var j = 0; j < (m.length); j += 2) {
                             var bool = regex.test(m[j]);
                             console.log(bool);
@@ -425,7 +437,7 @@ module.exports = {
                                     buttoArray.push(new Discord.MessageButton()
                                         .setLabel(groups.buttonLabel)
                                         .setStyle('LINK')
-                                        .setURL(m[j+1])
+                                        .setURL(m[j+1].trim())
                                         .setEmoji(groups.emojiID)
                                         )                                
                                 } else {
@@ -442,7 +454,7 @@ module.exports = {
                                 buttoArray.push(new Discord.MessageButton()
                                     .setLabel(m[j])
                                     .setStyle('LINK')
-                                    .setURL(m[j+1])
+                                    .setURL(m[j+1].trim())
                                     )
                             }
                             
