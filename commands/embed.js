@@ -192,19 +192,19 @@ module.exports = {
                         }
                         console.log(m);
                         if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
-
                             for (var j = 0; j < (m.length)/2; j+=2) {
-                                buttoArray[j] = new Discord.MessageButton()
+                                buttoArray.push(new Discord.MessageButton()
                                 .setLabel(m[j])
                                 .setStyle('LINK')
                                 .setURL(m[j+1])
+                                )
                             }
                             
                             var row = new Discord.MessageActionRow()
                             .addComponents(
                                 buttoArray
                             );
-                            
+                            console.log(buttoArray);
                             if (message.attachments.size === 1){
                                 if(description_state && title_state) {
                                     message.channel.send({
@@ -370,11 +370,12 @@ module.exports = {
                     }
                 
                     if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
-                        for (var j = 1; j <= (m.length)/2; ++j) {
-                            buttoArray[j] = new Discord.MessageButton()
-                            .setLabel(m[j*2-2])
-                            .setStyle('LINK')
-                            .setURL(m[j*2-1])
+                        for (var j = 0; j < (m.length)/2; j += 2) {
+                            buttoArray.push(new Discord.MessageButton()
+                                .setLabel(m[j])
+                                .setStyle('LINK')
+                                .setURL(m[j+1])
+                                )
                         }
                         
                         var row = new Discord.MessageActionRow()
@@ -485,7 +486,6 @@ module.exports = {
                         }
                     } else {
                         if (message.attachments.size === 1){
-                            console.log('destination');
                             if(description_state && title_state) {
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
                                     .then(msg => 
