@@ -181,18 +181,33 @@ module.exports = {
                             if (title_state){
                                 var title = m[0];
                                 m.shift();
+                                if (title.length > 256){
+                                    return message.channel.send({
+                                        embeds : [embed
+                                            .setTitle('Embed title exceeded 256 characters.')
+                                            .setColor('#dc661f')
+                                        ]
+                                    }).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                }
                             }
                         }
                         if (!m.length == 0){
-                        var description_state = m[0].startsWith("description.");
+                            var description_state = m[0].startsWith("description.");
                             if (description_state){
                                 var description = m[0];
                                 m.shift();
+                                if (description.length > 4096){
+                                    return message.channel.send({
+                                        embeds : [embed
+                                            .setTitle('Embed description exceeded 4096 characters.')
+                                            .setColor('#dc661f')
+                                        ]
+                                    }).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                }
                             }
                         }
-                        const regex = /^<:(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
+                        const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
 
-                        console.log(m);
                         try {
                             if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
                                 console.log(regex);
@@ -359,6 +374,15 @@ module.exports = {
                                                 components: []
                                             })
         
+                                    } else if (description_state){
+                                        message.channel.send({
+                                                embeds : [embed
+                                                    .setDescription(description.slice(12))
+                                                    .setColor('#dc661f')
+                                                ],
+                                                components: []
+                                            })
+        
                                     }
                                     else {
                                         message.delete()
@@ -416,7 +440,7 @@ module.exports = {
                         }
                     }
                 
-                    const regex = /^<:(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
+                    const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
                     if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
                         console.log(regex);
 
