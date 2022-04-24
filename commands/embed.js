@@ -14,6 +14,7 @@ module.exports = {
                     if (!args.length){
                         if(message.attachments.size === 1){
                             console.log("Yes, there's an attachemnt");
+                            console.log(message.attachments.first());
                             request(message.attachments.first().url, 
                                 function (error, response, body) {
                                     console.error('error:', error); 
@@ -704,40 +705,7 @@ module.exports = {
                         ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                 }
             }
-            // if(cmd === 'description'){
-            //     if (!args.length) return message.channel.send("There's no argument D:");
-            //     var m = args.join("").spit(',');
-            //     var channelID = m[0];
-            //     var messageID = m[1];
-            //     if (message.attachments.size === 1){
-            //         request(message.attachments.first().url, 
-            //             function (error, response, body) {
-            //                 console.error('error:', error); 
-            //                 console.log('statusCode:', response && response.statusCode); 
-            //                 console.log('body:', body);
 
-            //                 client.channels.cache.get(channelID).messages.fetch(messageID)
-            //                     .then(msg => {
-            //                         msgembed = msg.embeds[0]; 
-            //                         msg.edit({
-            //                             embeds : [msgembed
-            //                                 .setDescription(body)
-            //                                 ]
-            //                         })
-            //                     })
-            //                     .catch(
-            //                         message.channel.send({
-            //                             embeds : [embed
-            //                                 .setColor('#dc661f')
-            //                                 .setTitle("Can't fetch message.")
-            //                                 ]
-            //                         })
-            //                     )     
-            //             }
-            //         )
-            //     }
-            
-            // }
         
     }    
 }
