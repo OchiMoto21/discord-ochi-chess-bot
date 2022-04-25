@@ -1,5 +1,3 @@
-// const regex = /([^,]+)/gm;
-const request = require('request');
 const delimiter = "|";
 module.exports = {
     name: 'edit',
@@ -319,6 +317,7 @@ module.exports = {
                     }
                     
                 }
+                message.delete()
             } catch {
                 console.error;
                 message.delete();
