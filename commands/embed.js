@@ -1,4 +1,3 @@
-// const regex = /([^,]+)/gm;
 const request = require('request');
 const delimiter = "|";
 module.exports = {
@@ -450,6 +449,7 @@ module.exports = {
                                 ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                         }
                     }
+                    message.delete()
                 } catch {
                     console.error;
                     message.delete();
