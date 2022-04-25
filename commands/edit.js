@@ -97,7 +97,12 @@ module.exports = {
                     for (var j = 0; j < (m.length); j += 2) {
                         var bool = regex.test(m[j]);
                         console.log(bool);
-                        
+                        if (!isValidURL(m[j+1].trim())){
+                            return channel.send({embeds : [embed
+                                .setTitle("Not a valid button URL.")
+                                .setDescription("This message will be deleted in 10 seconds.")
+                                ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                        }
                         if (m[j].length > 80 && !(regex.test(m[j]))){
                             return channel.send({
                                 embeds : [embed
