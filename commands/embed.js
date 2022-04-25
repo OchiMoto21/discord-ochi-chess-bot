@@ -249,7 +249,6 @@ module.exports = {
                                 console.log(regex);
 
                                 for (var j = 0; j < (m.length); j += 2) {
-                                    var bool = regex.test(m[j]);
                                     if (!isValidURL(m[j+1].trim())){
                                         return channel.send({embeds : [embed
                                             .setTitle("Not a valid button URL.")
