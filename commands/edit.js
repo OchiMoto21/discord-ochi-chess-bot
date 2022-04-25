@@ -9,59 +9,97 @@ module.exports = {
 
         if(cmd === 'edit'){
             try {
-                if (!args.length && !(message.attachments.size === 1)) return message.channel.send("There's no argument D:");
+                if (!args.length && !(message.attachments.size === 1)) return channel.send("There's no argument D:");
                 var buttoArray = [];
                 var embed = new Discord.MessageEmbed();
                 const m = args.join(" ").split(delimiter);
 
-                var title = ""; 
+                var image = ""; 
+                var title = "";
+                var description_state = false;
+                var title_state = false;
+
                 var channelID = m[0];
                 var messageID = m[1];
-                console.log(channelID,messageID);
-
                 m.shift();
                 m.shift();
+                var channel = message.channel;
+                        
                 if (!m.length == 0){
                     var title_state = m[0].startsWith("title.");
-                    var description_state = false;
                     if (title_state){
                         var title = m[0];
                         m.shift();
-
+                        if (title.length > 256){
+                            return channel.send({
+                                embeds : [embed
+                                    .setTitle('Embed title exceeded 256 characters.')
+                                    .setColor('#dc661f')
+                                ]
+                            }).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                        }
                     }
                 }
+                console.log(m.length);
 
                 if (!m.length == 0){
                     var description_state = m[0].startsWith("description.");
                     if (description_state){
                         var description = m[0];
                         m.shift();
+                        if (description.length > 4096){
+                            return channel.send({
+                                embeds : [embed
+                                    .setTitle('Embed description exceeded 4096 characters.')
+                                    .setColor('#dc661f')
+                                ]
+                            }).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                        }
                     }
                 }
+                console.log(m.length);
                 if (!m.length == 0){
                     var image_state = m[0].startsWith("image.");
                     if (image_state){
                         var image = m[0].trim().slice(6);
                         m.shift();
-                        console.log(image);
                     }
                 }
                 if (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")){
                     var image = message.attachments.first().url;
                 }
-
+                console.log(m.length);
+                if (!isValidURL(image)){
+                    return channel.send({embeds : [embed
+                        .setTitle("Not a valid image URL.")
+                        .setDescription("This message will be deleted in 10 seconds.")
+                        ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                }
                 var image_response = (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")) || image_state;
+                
+                var one_row = (!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0);
 
                 const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
+                
+                if (!one_row) {
+                    return channel.send({embeds : [embed
+                        .setTitle("You excedeed the maximum of five buttons.")
+                        .setDescription("This message will be deleted in 10 seconds.")
+                        ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                };
+                console.log(m.length);
+
+                message.delete();
                 if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
                     console.log(regex);
+                    console.log(m.length);
 
                     for (var j = 0; j < (m.length); j += 2) {
                         var bool = regex.test(m[j]);
                         console.log(bool);
                         
                         if (m[j].length > 80 && !(regex.test(m[j]))){
-                            return message.channel.send({
+                            return channel.send({
                                 embeds : [embed
                                     .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters humu')
                                     .setColor('#dc661f')
@@ -78,7 +116,7 @@ module.exports = {
                                     )                                
                             } else {
 
-                                return message.channel.send({
+                                return channel.send({
                                     embeds : [embed
                                         .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters')
                                         .setColor('#dc661f')
@@ -311,17 +349,15 @@ module.exports = {
                                     })
                                 })
                         } else {
-                            message.delete();
+                            
                             return;
                         }
                     }
                     
                 }
-                message.delete()
             } catch {
                 console.error;
-                message.delete();
-                message.channel.send({embeds : [new Discord.MessageEmbed()
+                channel.send({embeds : [new Discord.MessageEmbed()
                     .setTitle("Not a valid argument.")
                     .setDescription("This message will be deleted in 10 seconds.")
                     ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
@@ -329,3 +365,8 @@ module.exports = {
         }
     }
 }
+
+function isValidURL(string) {
+    var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    return (res !== null)
+};
