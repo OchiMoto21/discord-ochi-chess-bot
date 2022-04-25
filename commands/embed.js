@@ -12,9 +12,8 @@ module.exports = {
             if(cmd === 'embed'){
                 try {
                     if (!args.length){
-                        if(message.attachments.size === 1){
+                        if(message.attachments.size === 1 && message.attachments.first().contentType.startsWith("text")){
                             console.log("Yes, there's an attachemnt");
-                            console.log(message.attachments.first());
                             request(message.attachments.first().url, 
                                 function (error, response, body) {
                                     console.error('error:', error); 
@@ -167,7 +166,6 @@ module.exports = {
                                     }
                                 }
                             );
-                            message.delete();
                             return;
                         } 
                     } else {
@@ -177,6 +175,7 @@ module.exports = {
                         const m = args.join(" ").split(delimiter);
                         var title = ""; 
                         var description_state = false;
+                        
                         if (!m.length == 0){
                             var title_state = m[0].startsWith("title.");
                             if (title_state){
@@ -207,6 +206,18 @@ module.exports = {
                                 }
                             }
                         }
+                        if (!m.length == 0){
+                            var image_state = m[0].startsWith("image.");
+                            if (image_state){
+                                var image = m[0].trim().slice(6);
+                                m.shift();
+                            }
+                        }
+                        if (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")){
+                            var image = message.attachments.first().url;
+                        }
+
+                        var image_response = (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")) || image_state;
                         const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
 
                         try {
@@ -258,14 +269,14 @@ module.exports = {
                                     buttoArray
                                 );
                                 console.log(buttoArray);
-                                if (message.attachments.size === 1){
+                                if (image_response){
                                     if(description_state && title_state) {
                                         message.channel.send({
                                                     embeds : [embed
                                                         .setTitle(title.slice(6))
                                                         .setDescription(description.slice(12))
                                                         .setColor('#dc661f')
-                                                        .setImage(message.attachments.first().url)
+                                                        .setImage(image)
                                                         ],
                                                     components: [row]
                                                 })
@@ -274,22 +285,31 @@ module.exports = {
                                                     embeds : [embed
                                                         .setTitle(title.slice(6))
                                                         .setColor('#dc661f')
-                                                        .setImage(message.attachments.first().url)
+                                                        .setImage(image)
                                                         ],
                                                     components: [row]
                                                 })
                                             
+                                    } else if (description_state) {
+                                        message.channel.send({
+                                                    embeds : [embed
+                                                        .setDescription(description.slice(12))
+                                                        .setColor('#dc661f')
+                                                        .setImage(image)
+                                                        ],
+                                                    components: [row]
+                                                })
+                                                        
                                     } else {
                                         message.channel.send({
                                                     embeds : [embed
                                                         .setColor('#dc661f')
-                                                        .setImage(message.attachments.first().url)
+                                                        .setImage(image)
                                                         ],
                                                     components: [row]
                                                 })
                                             
                                     }
-                                        message.delete()
                                 } else {
                                     if(description_state && title_state) {
                                         message.channel.send({
@@ -311,24 +331,32 @@ module.exports = {
                                                 ],
                                                 components: [row]
                                             })
-                                        
+                                    } else if (description_state){
+                                        console.log('destination');
+
+                                        message.channel.send({
+                                                embeds : [embed
+                                                    .setDescription(description.slice(12))
+                                                    .setColor('#dc661f')
+                                                ],
+                                                components: [row]
+                                            })
                                     } else {
                                         message.channel.send({
                                                 components: [row]
                                             })
                                         
                                     }
-                                        message.delete()
                                 }
                             } else {
-                                if (message.attachments.size === 1){
+                                if (image_response){
                                     if(description_state && title_state) {
                                         message.channel.send({
                                                     embeds : [embed
                                                         .setTitle(title.slice(6))
                                                         .setDescription(description.slice(12))
                                                         .setColor('#dc661f')
-                                                        .setImage(message.attachments.first().url)
+                                                        .setImage(image)
                                                         ],
                                                     components: []
                                                 }
@@ -339,22 +367,30 @@ module.exports = {
                                                     embeds : [embed
                                                         .setTitle(title.slice(6))
                                                         .setColor('#dc661f')
-                                                        .setImage(message.attachments.first().url)
+                                                        .setImage(image)
                                                         ],
                                                         components: []
                                                 })
+                                    } if (description_state){
+                                        message.channel.send({
+                                                embeds : [embed
+                                                    .setDescription(description.slice(12))
+                                                    .setColor('#dc661f')
+                                                    .setImage(image)
+                                                ],
+                                                components: []
+                                            })
                                     } else {
                                         message.channel.send({
                                                     embeds : [embed
                                                         .setColor('#dc661f')
-                                                        .setImage(message.attachments.first().url)
+                                                        .setImage(image)
                                                         ],
                                                     components: []
         
                                                 })
         
                                     }
-                                        message.delete()
                                 } else {
                                     if(description_state && title_state) {
                                         message.channel.send({
@@ -386,10 +422,8 @@ module.exports = {
         
                                     }
                                     else {
-                                        message.delete()
                                         return;
                                     }
-                                    message.delete()
                                 }
                                 
                             }
@@ -421,6 +455,8 @@ module.exports = {
                     var title = ""; 
                     var channelID = m[0];
                     var messageID = m[1];
+                    console.log(channelID,messageID);
+
                     m.shift();
                     m.shift();
                     if (!m.length == 0){
@@ -440,7 +476,20 @@ module.exports = {
                             m.shift();
                         }
                     }
-                
+                    if (!m.length == 0){
+                        var image_state = m[0].startsWith("image.");
+                        if (image_state){
+                            var image = m[0].trim().slice(6);
+                            m.shift();
+                            console.log(image);
+                        }
+                    }
+                    if (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")){
+                        var image = message.attachments.first().url;
+                    }
+
+                    var image_response = (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")) || image_state;
+
                     const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
                     if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
                         console.log(regex);
@@ -490,7 +539,7 @@ module.exports = {
                             buttoArray
                         );
                         
-                        if (message.attachments.size === 1){
+                        if (image_response){
                             if(description_state && title_state) {
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
                                     .then(msg => {
@@ -500,7 +549,7 @@ module.exports = {
                                                 .setTitle(title.slice(6))
                                                 .setDescription(description.slice(12))
                                                 .setColor('#dc661f')
-                                                .setImage(message.attachments.first().url)
+                                                .setImage(image)
                                                 ],
                                             components: [row]
                                         })
@@ -515,7 +564,7 @@ module.exports = {
                                             embeds : [embed
                                                 .setTitle(title.slice(6))
                                                 .setColor('#dc661f')
-                                                .setImage(message.attachments.first().url)
+                                                .setImage(image)
                                                 ],
                                             components: [row]
                                         })
@@ -529,7 +578,7 @@ module.exports = {
                                             embeds : [embed
                                                 .setDescription(description.slice(12))
                                                 .setColor('#dc661f')
-                                                .setImage(message.attachments.first().url)
+                                                .setImage(image)
                                                 ],
                                             components: [row]
                                         })
@@ -537,13 +586,14 @@ module.exports = {
                                     }
                                     )
                             } else {
+                                console.log("destination");
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
                                     .then(msg => {
                                         var embed = msg.embeds[0];
                                         msg.edit({
                                             embeds : [embed
                                                 .setColor('#dc661f')
-                                                .setImage(message.attachments.first().url)
+                                                .setImage(image)
                                                 ],
                                             components: [row]
                                         })
@@ -551,7 +601,6 @@ module.exports = {
                                     }
                                     )
                             }
-                                message.delete()
                         } else {
 
                             if(description_state && title_state) {
@@ -580,7 +629,20 @@ module.exports = {
                                         components: [row]
                                     })
                                 }
-                                    )
+                                )
+                            } else if (description_state){
+                                client.channels.cache.get(channelID).messages.fetch(messageID)
+                                .then(msg => {
+                                    var embed = msg.embeds[0];
+                                    msg.edit({
+                                        embeds : [embed
+                                            .setDescription(description.slice(12))
+                                            .setColor('#dc661f')
+                                        ],
+                                        components: [row]
+                                    })
+                                }
+                                )
                             } else {
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
                                 .then(msg =>
@@ -589,10 +651,9 @@ module.exports = {
                                     })
                                 )
                             }
-                            message.delete()
                         }
                     } else {
-                        if (message.attachments.size === 1){
+                        if (image_response){
                             if(description_state && title_state) {
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
                                     .then(msg => 
@@ -601,7 +662,7 @@ module.exports = {
                                                 .setTitle(title.slice(6))
                                                 .setDescription(description.slice(12))
                                                 .setColor('#dc661f')
-                                                .setImage(message.attachments.first().url)
+                                                .setImage(image)
                                                 ],
                                             components: []
                                         }
@@ -617,7 +678,7 @@ module.exports = {
                                             embeds : [embed
                                                 .setTitle(title.slice(6))
                                                 .setColor('#dc661f')
-                                                .setImage(message.attachments.first().url)
+                                                .setImage(image)
                                                 ]
                                         })
                                     }
@@ -631,7 +692,7 @@ module.exports = {
                                                 embeds : [embed
                                                     .setDescription(description.slice(12))
                                                     .setColor('#dc661f')
-                                                    .setImage(message.attachments.first().url)
+                                                    .setImage(image)
                                                     ]
                                             })
                                         }
@@ -643,14 +704,13 @@ module.exports = {
                                         msg.edit({
                                             embeds : [embed
                                                 .setColor('#dc661f')
-                                                .setImage(message.attachments.first().url)
+                                                .setImage(image)
                                                 ]
 
                                         })
                                     }
                                     )
                             }
-                                message.delete()
                         } else {
                             if (description_state && title_state) {
                                 client.channels.cache.get(channelID).messages.fetch(messageID)
@@ -692,7 +752,6 @@ module.exports = {
                                 message.delete();
                                 return;
                             }
-                            message.delete()
                         }
                         
                     }
