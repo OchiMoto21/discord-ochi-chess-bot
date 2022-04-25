@@ -172,8 +172,13 @@ module.exports = {
                         var buttoArray = [];
                         var embed = new Discord.MessageEmbed();
                         const m = args.join(" ").split(delimiter);
+                    
+                        var image = ""; 
                         var title = ""; 
                         var description_state = false;
+                        var title_state = false;
+
+                        var channel = message.channel;
                         
                         if (!m.length == 0){
                             var title_state = m[0].startsWith("title.");
@@ -181,7 +186,7 @@ module.exports = {
                                 var title = m[0];
                                 m.shift();
                                 if (title.length > 256){
-                                    return message.channel.send({
+                                    return channel.send({
                                         embeds : [embed
                                             .setTitle('Embed title exceeded 256 characters.')
                                             .setColor('#dc661f')
@@ -198,7 +203,7 @@ module.exports = {
                                 var description = m[0];
                                 m.shift();
                                 if (description.length > 4096){
-                                    return message.channel.send({
+                                    return channel.send({
                                         embeds : [embed
                                             .setTitle('Embed description exceeded 4096 characters.')
                                             .setColor('#dc661f')
@@ -219,31 +224,42 @@ module.exports = {
                             var image = message.attachments.first().url;
                         }
                         console.log(m.length);
-
+                        if (!isValidURL(image)){
+                            return channel.send({embeds : [embed
+                                .setTitle("Not a valid image URL.")
+                                .setDescription("This message will be deleted in 10 seconds.")
+                                ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                        }
                         var image_response = (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")) || image_state;
+                        
                         var one_row = (!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0);
-                        var multiple_row = (!m.length == 0 && m[m.length-1].startsWith("columns.") && (m.length-1) % 2 == 0);
 
                         const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
-                        if (!one_row && !multiple_row) {
-                            return message.channel.send({embeds : [embed
+                        
+                        if (!one_row) {
+                            return channel.send({embeds : [embed
                                 .setTitle("You excedeed the maximum of five buttons.")
                                 .setDescription("This message will be deleted in 10 seconds.")
                                 ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                         }
                         
                         try {
+                            message.delete()
                             if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
                                 console.log(regex);
 
                                 for (var j = 0; j < (m.length); j += 2) {
                                     var bool = regex.test(m[j]);
-                                    console.log(bool);
-                                    
+                                    if (!isValidURL(m[j+1].trim())){
+                                        return channel.send({embeds : [embed
+                                            .setTitle("Not a valid button URL.")
+                                            .setDescription("This message will be deleted in 10 seconds.")
+                                            ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                    }
                                     if (m[j].length > 80 && !(regex.test(m[j]))){
-                                        return message.channel.send({
+                                        return channel.send({
                                             embeds : [embed
-                                                .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters humu')
+                                                .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters.')
                                                 .setColor('#dc661f')
                                             ]
                                         }).then(msg => {setTimeout(() => msg.delete(), 10000)});
@@ -258,7 +274,7 @@ module.exports = {
                                                 )                                
                                         } else {
         
-                                            return message.channel.send({
+                                            return channel.send({
                                                 embeds : [embed
                                                     .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters')
                                                     .setColor('#dc661f')
@@ -284,7 +300,8 @@ module.exports = {
                                 console.log(buttoArray);
                                 if (image_response){
                                     if(description_state && title_state) {
-                                        message.channel.send({
+                                        console.log('1');
+                                        return channel.send({
                                                     embeds : [embed
                                                         .setTitle(title.slice(6))
                                                         .setDescription(description.slice(12))
@@ -294,7 +311,8 @@ module.exports = {
                                                     components: [row]
                                                 })
                                     } else if (title_state) {
-                                        message.channel.send({
+                                        console.log('2');
+                                        return channel.send({
                                                     embeds : [embed
                                                         .setTitle(title.slice(6))
                                                         .setColor('#dc661f')
@@ -304,7 +322,8 @@ module.exports = {
                                                 })
                                             
                                     } else if (description_state) {
-                                        message.channel.send({
+                                        console.log('3');
+                                        return channel.send({
                                                     embeds : [embed
                                                         .setDescription(description.slice(12))
                                                         .setColor('#dc661f')
@@ -314,7 +333,8 @@ module.exports = {
                                                 })
                                                         
                                     } else {
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                     embeds : [embed
                                                         .setColor('#dc661f')
                                                         .setImage(image)
@@ -325,7 +345,8 @@ module.exports = {
                                     }
                                 } else {
                                     if(description_state && title_state) {
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                     embeds : [embed
                                                         .setTitle(title.slice(6))
                                                         .setDescription(description.slice(12))
@@ -336,8 +357,8 @@ module.exports = {
                                             
                                     } else if (title_state){
                                         console.log('destination');
-
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                 embeds : [embed
                                                     .setTitle(title.slice(6))
                                                     .setColor('#dc661f')
@@ -346,8 +367,8 @@ module.exports = {
                                             })
                                     } else if (description_state){
                                         console.log('destination');
-
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                 embeds : [embed
                                                     .setDescription(description.slice(12))
                                                     .setColor('#dc661f')
@@ -355,7 +376,8 @@ module.exports = {
                                                 components: [row]
                                             })
                                     } else {
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                 components: [row]
                                             })
                                         
@@ -364,7 +386,8 @@ module.exports = {
                             } else {
                                 if (image_response){
                                     if(description_state && title_state) {
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                     embeds : [embed
                                                         .setTitle(title.slice(6))
                                                         .setDescription(description.slice(12))
@@ -376,7 +399,8 @@ module.exports = {
                                                 )
                                             
                                     } else if (title_state) {
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                     embeds : [embed
                                                         .setTitle(title.slice(6))
                                                         .setColor('#dc661f')
@@ -385,7 +409,8 @@ module.exports = {
                                                         components: []
                                                 })
                                     } else if (description_state){
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                 embeds : [embed
                                                     .setDescription(description.slice(12))
                                                     .setColor('#dc661f')
@@ -394,7 +419,8 @@ module.exports = {
                                                 components: []
                                             })
                                     } else {
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                     embeds : [embed
                                                         .setColor('#dc661f')
                                                         .setImage(image)
@@ -406,7 +432,8 @@ module.exports = {
                                     }
                                 } else {
                                     if(description_state && title_state) {
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                     embeds : [embed
                                                         .setTitle(title.slice(6))
                                                         .setDescription(description.slice(12))
@@ -416,7 +443,8 @@ module.exports = {
                                                 })
         
                                     } else if (title_state){
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                 embeds : [embed
                                                     .setTitle(title.slice(6))
                                                     .setColor('#dc661f')
@@ -425,7 +453,8 @@ module.exports = {
                                             })
         
                                     } else if (description_state){
-                                        message.channel.send({
+                                        
+                                        return channel.send({
                                                 embeds : [embed
                                                     .setDescription(description.slice(12))
                                                     .setColor('#dc661f')
@@ -435,6 +464,7 @@ module.exports = {
         
                                     }
                                     else {
+                                        
                                         return;
                                     }
                                 }
@@ -442,18 +472,18 @@ module.exports = {
                             }
                         } catch {
                             console.error;
-                            message.delete();
-                            message.channel.send({embeds : [embed
+                            
+                            channel.send({embeds : [embed
                                 .setTitle("Not a valid argument.")
                                 .setDescription("This message will be deleted in 10 seconds.")
                                 ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                         }
                     }
-                    message.delete()
+                    
                 } catch {
                     console.error;
-                    message.delete();
-                    message.channel.send({embeds : [memberMessageEmbed
+                    
+                    channel.send({embeds : [memberMessageEmbed
                         .setTitle("Not a valid argument.")
                         .setDescription("This message will be deleted in 10 seconds.")
                         ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
@@ -461,3 +491,7 @@ module.exports = {
             }
     }    
 }
+function isValidURL(string) {
+    var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    return (res !== null)
+};
