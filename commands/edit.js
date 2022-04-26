@@ -63,18 +63,25 @@ module.exports = {
                     if (image_state){
                         var image = m[0].trim().slice(6);
                         m.shift();
+                        if (!isValidURL(image)){
+                            return channel.send({embeds : [embed
+                                .setTitle("Not a valid image URL.")
+                                .setDescription("This message will be deleted in 10 seconds.")
+                                ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                        }
                     }
                 }
                 if (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")){
                     var image = message.attachments.first().url;
+                    if (!isValidURL(image)){
+                        return channel.send({embeds : [embed
+                            .setTitle("Not a valid image URL.")
+                            .setDescription("This message will be deleted in 10 seconds.")
+                            ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                    }
                 }
                 console.log(m.length);
-                if (!isValidURL(image)){
-                    return channel.send({embeds : [embed
-                        .setTitle("Not a valid image URL.")
-                        .setDescription("This message will be deleted in 10 seconds.")
-                        ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                }
+
                 var image_response = (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")) || image_state;
                 
                 var one_row = (!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0);
@@ -247,6 +254,7 @@ module.exports = {
                             }
                             )
                         } else {
+                            console.log('tujuan');
                             client.channels.cache.get(channelID).messages.fetch(messageID)
                             .then(msg =>
                                 msg.edit({
