@@ -218,25 +218,32 @@ module.exports = {
                             if (image_state){
                                 var image = m[0].trim().slice(6);
                                 m.shift();
+                                if (!isValidURL(image)){
+                                    return channel.send({embeds : [embed
+                                        .setTitle("Not a valid image URL.")
+                                        .setDescription("This message will be deleted in 10 seconds.")
+                                        ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                }
                             }
                         }
                         if (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")){
                             var image = message.attachments.first().url;
+                            if (!isValidURL(image)){
+                                return channel.send({embeds : [embed
+                                    .setTitle("Not a valid image URL.")
+                                    .setDescription("This message will be deleted in 10 seconds.")
+                                    ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                            }
                         }
                         console.log(m.length);
-                        if (!isValidURL(image)){
-                            return channel.send({embeds : [embed
-                                .setTitle("Not a valid image URL.")
-                                .setDescription("This message will be deleted in 10 seconds.")
-                                ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                        }
+
                         var image_response = (message.attachments.size === 1 && message.attachments.first().contentType.startsWith("image")) || image_state;
                         
                         var one_row = (!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0);
 
                         const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
                         
-                        if (!one_row) {
+                        if (!one_row && !m.length == 0) {
                             return channel.send({embeds : [embed
                                 .setTitle("You excedeed the maximum of five buttons.")
                                 .setDescription("This message will be deleted in 10 seconds.")
@@ -263,7 +270,7 @@ module.exports = {
                                             ]
                                         }).then(msg => {setTimeout(() => msg.delete(), 10000)});
                                     } else if (regex.test(m[j])){
-                                        var groups = m[j].match(regex).groups;
+                                        var groups = m[j].trim().match(regex).groups;
                                         if(!(groups.buttonLabel.length > 80)){
                                             buttoArray.push(new Discord.MessageButton()
                                                 .setLabel(groups.buttonLabel)
@@ -283,7 +290,7 @@ module.exports = {
                                     } else {
                                         
                                         buttoArray.push(new Discord.MessageButton()
-                                            .setLabel(m[j])
+                                            .setLabel(m[j].trim())
                                             .setStyle('LINK')
                                             .setURL(m[j+1].trim())
                                             )
