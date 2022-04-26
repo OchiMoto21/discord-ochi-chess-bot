@@ -88,7 +88,7 @@ module.exports = {
 
                 const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
                 
-                if (!one_row) {
+                if (!one_row && !m.length == 0) {
                     return channel.send({embeds : [embed
                         .setTitle("You excedeed the maximum of five buttons.")
                         .setDescription("This message will be deleted in 10 seconds.")
@@ -116,7 +116,7 @@ module.exports = {
                                 ]
                             }).then(msg => {setTimeout(() => msg.delete(), 10000)});
                         } else if (regex.test(m[j])){
-                            var groups = m[j].match(regex).groups;
+                            var groups = m[j].trim().match(regex).groups;
                             if(!(groups.buttonLabel.length > 80)){
                                 buttoArray.push(new Discord.MessageButton()
                                     .setLabel(groups.buttonLabel)
@@ -136,7 +136,7 @@ module.exports = {
                         } else {
                             
                             buttoArray.push(new Discord.MessageButton()
-                                .setLabel(m[j])
+                                .setLabel(m[j].trim())
                                 .setStyle('LINK')
                                 .setURL(m[j+1].trim())
                                 )
