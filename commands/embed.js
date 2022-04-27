@@ -251,7 +251,6 @@ module.exports = {
                         }
                         
                         try {
-                            message.delete()
                             if(!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0){
                                 console.log(regex);
 
