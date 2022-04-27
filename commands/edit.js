@@ -308,7 +308,7 @@ module.exports = {
                                     }
                                     )
                         } else {
-                            console.log('selesai')
+                            console.log('selesai');
                             client.channels.cache.get(channelID).messages.fetch(messageID)
                                 .then(msg => {
                                     var embed = msg.embeds[0];
