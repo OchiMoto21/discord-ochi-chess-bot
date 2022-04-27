@@ -274,8 +274,7 @@ module.exports = {
                                             .setDescription(description.slice(12))
                                             .setColor('#dc661f')
                                             .setImage(image)
-                                            ],
-                                        components: []
+                                            ]
                                     }
                                     )
                                 )
@@ -309,6 +308,7 @@ module.exports = {
                                     }
                                     )
                         } else {
+                            console.log('selesai')
                             client.channels.cache.get(channelID).messages.fetch(messageID)
                                 .then(msg => {
                                     var embed = msg.embeds[0];
