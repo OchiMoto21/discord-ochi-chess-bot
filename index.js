@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const config = require('./config.json');
+//const config = require('./config.json');
 //require('./deploy_command.js')
 
 //const { MongoClient, ServerApiVersion } = require('mongodb');
