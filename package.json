@@ -13,8 +13,10 @@
   "author": "OchiMoto21",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/rest": "^0.4.1",
     "chess.js": "^0.12.0",
     "discord.js": "^13.1.0",
+    "mongodb": "^4.5.0",
     "node-fetch": "^3.2.3",
     "request": "^2.88.2"
   },
