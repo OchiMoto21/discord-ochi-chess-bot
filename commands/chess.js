@@ -4,8 +4,8 @@ const { Chess } = require('chess.js');
 const Board = new Map();
 
 module.exports = {
-    name: 'start',
-    aliases: ['join', 'move', 'restart', 'quit', 'resign','flip'],
+    name: 'chess',
+    aliases: ['start','join', 'move', 'restart', 'quit', 'resign','flip'],
     description: "This command will start a game of chess",
     async execute(message, args, cmd, client, Discord){
         try {        
