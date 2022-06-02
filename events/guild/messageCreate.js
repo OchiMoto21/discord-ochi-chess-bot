@@ -1,6 +1,6 @@
 module.exports = (Discord, client, message) => {
     const prefix = '&';
-    if(message.content.startsWith('<:kaelabonk:956580833374928937>') && !message.author.bot){
+    if(message.content.includes('<:kaelabonk:956580833374928937>') && !message.author.bot){
         const command = client.commands.get("kaelabonk");
         const cmd = "";
         const args = "";
