@@ -1,8 +1,8 @@
-const config = require('../config.json');
+//const config = require('../config.json');
 const mongoose = require('mongoose');
 const fs = require('fs');
 
-const uri = config.MongoDB;
+const uri = process.env.mongoDB_TOKEN;
 const mongodb_Eventfiles = fs.readdirSync(`./events/mongodb`).filter(file => file.endsWith('.js'));
 
 module.exports = (client) => {
