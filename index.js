@@ -12,7 +12,7 @@ const fs = require('fs');
 client.commands = new Discord.Collection();
 
 client.events = new Discord.Collection();
-['command_handler', 'event_handler','mongodbLogin','createBonkLevel'].forEach(handler =>{
+['command_handler', 'event_handler','mongodbLogin','createBonkLevel','createEmbedBuilder'].forEach(handler =>{
     require(`./handlers/${handler}`)(client, Discord);
 })
 
