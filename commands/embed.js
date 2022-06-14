@@ -7,7 +7,6 @@ module.exports = {
     async execute(message, args, cmd, client, Discord){
         
         var errornotif = new Discord.MessageEmbed()
-        if(message.channel.id == "825593098187833344"){
         
             if(cmd === 'embed'){
                 if (!args.length && message.attachments.size === 1 && message.attachments.first().contentType.startsWith("text")){
@@ -185,7 +184,7 @@ module.exports = {
                     }
                 }
             }
-        }
+        
     }    
 }
 function isValidURL(string) {
