@@ -29,7 +29,7 @@ module.exports = {
                         );
                     } else {
                         var buttoArray = [];
-                        const m = args.join(" ").split(delimiter);
+                        const m = args.join(" ").split(delimiter).map(Function.prototype.call, String.prototype.trim).filter(e =>  e);
     
                         var channelID = m[0];
                         var messageID = m[1];
@@ -37,143 +37,145 @@ module.exports = {
                         m.shift();
                         var channel = message.channel;
                         var chnl = await client.channels.fetch(channelID)
-                        console.log(channelID)
                         var msg = await chnl.messages.fetch(messageID)
-                        //    .then(msg => {
-                            var embed = msg.embeds[0];
-                            while (!m.length == 0 && (m[0].startsWith("title.")||m[0].startsWith("image.")||m[0].startsWith("color.")||m[0].startsWith("description."))){
-                                        
-                                var title_state = m[0].startsWith("title.");
-                                var image_state = m[0].startsWith("image.");
-                                var color_state = m[0].startsWith("color.")
-                                var description_state = m[0].startsWith("description.");
-        
-                                if(title_state){
-                                    var title = m[0];
-                                    m.shift();
-                                    if (title.length > (256+6)){
-                                        return channel.send({
-                                            embeds : [errornotif
-                                                .setTitle('Embed title exceeded 256 characters.')
-                                                .setColor('#dc661f')
-                                            ]
-                                        }).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                    }
-                                    embed.setTitle(title.slice(6))
+
+                        var embed = msg.embeds[0];
+                        while (!m.length == 0 && (m[0].startsWith("title.")||m[0].startsWith("image.")||m[0].startsWith("color.")||m[0].startsWith("description."))){
+                        
+                            var title_state = m[0].startsWith("title.");
+                            var image_state = m[0].startsWith("image.");
+                            var color_state = m[0].startsWith("color.")
+                            var description_state = m[0].startsWith("description.");
+    
+                            if(title_state){
+                                var title = m[0];
+                                m.shift();
+                                if (title.length > (256+6)){
+                                    return channel.send({
+                                        embeds : [errornotif
+                                            .setTitle('Embed title exceeded 256 characters.')
+                                            .setColor('#dc661f')
+                                        ]
+                                    }).then(msg => {setTimeout(() => msg.delete(), 10000)});
                                 }
-                            
-                                if (image_state){
-                                    var image = m[0].trim().slice(6);
-                                    m.shift();
-                                    if (!isValidURL(image)){
-                                        return channel.send({embeds : [errornotif
-                                            .setTitle("Not a valid image URL.")
-                                            .setDescription("This message will be deleted in 10 seconds.")
-                                            ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                    }
-                                    embed.setImage(image)
-                                } 
-                            
-                                if(color_state){
-                                    if (!(m[0].slice(6).match(/^#(?:[0-9a-fA-F]{3}){1,2}$/g) !== null)){
-                                        return channel.send({embeds : [errornotif
-                                            .setTitle("Not a valid hex color.")
-                                            .setDescription("This message will be deleted in 10 seconds.")
-                                            ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                    }
-                                    var color = m[0];
-                                    embed.setColor(color.slice(6))
-                                    m.shift();
+                                embed.setTitle(title.slice(6))
+                                var embed_state = true
+                            }
+                        
+                            if (image_state){
+                                var image = m[0].trim().slice(6);
+                                m.shift();
+                                if (!isValidURL(image)){
+                                    return channel.send({embeds : [errornotif
+                                        .setTitle("Not a valid image URL.")
+                                        .setDescription("This message will be deleted in 10 seconds.")
+                                        ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                                 }
-        
-                                if (description_state){
-                                    var description = m[0].slice(12);
-                                    if (description.length > 4096){
-                                        return channel.send({
-                                            embeds : [errornotif
-                                                .setTitle('Embed description exceeded 4096 characters.')
-                                                .setColor('#dc661f')
-                                            ]
-                                        }).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                    }
-                                    embed.setDescription(description)
-                                    m.shift();
+                                embed.setImage(image)
+                                var embed_state = true
+                            } 
+                        
+                            if(color_state){
+                                if (!(m[0].slice(6).match(/^#(?:[0-9a-fA-F]{3}){1,2}$/g) !== null)){
+                                    return channel.send({embeds : [errornotif
+                                        .setTitle("Not a valid hex color.")
+                                        .setDescription("This message will be deleted in 10 seconds.")
+                                        ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                                 }
+                                var color = m[0];
+                                console.log("color set")
+                                embed.setColor(color.slice(6))
+                                m.shift();
                             }
     
-                            var one_row = (!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0);
-    
-                            const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
-                            
-                            if (!one_row && !m.length == 0) {
-                                return channel.send({embeds : [embed
-                                    .setTitle("Invalid buttons argument.")
-                                    .setDescription("This message will be deleted in 10 seconds.")
-                                    ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                            };
-                            console.log(m.length);
-    
-                            if(one_row){
-                                console.log(regex);
-                                console.log(m.length);
-    
-                                for (var j = 0; j < (m.length); j += 2) {
-                                    if (!isValidURL(m[j+1].trim())){
-                                        return channel.send({embeds : [embed
-                                            .setTitle("Not a valid button URL.")
-                                            .setDescription("This message will be deleted in 10 seconds.")
-                                            ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                    }
-                                    if (m[j].length > 80 && !(regex.test(m[j]))){
-                                        return channel.send({
-                                            embeds : [embed
-                                                .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters humu')
-                                                .setColor('#dc661f')
-                                            ]
-                                        }).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                    } else if (regex.test(m[j])){
-                                        var groups = m[j].trim().match(regex).groups;
-                                        if(!(groups.buttonLabel.length > 80)){
-                                            buttoArray.push(new Discord.MessageButton()
-                                                .setLabel(groups.buttonLabel)
-                                                .setStyle('LINK')
-                                                .setURL(m[j+1].trim())
-                                                .setEmoji(groups.emojiID)
-                                                )                                
-                                        } else {
-    
-                                            return channel.send({
-                                                embeds : [embed
-                                                    .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters')
-                                                    .setColor('#dc661f')
-                                                ]
-                                            }).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                        }
-                                    } else {
-                                        
-                                        buttoArray.push(new Discord.MessageButton()
-                                            .setLabel(m[j].trim())
-                                            .setStyle('LINK')
-                                            .setURL(m[j+1].trim())
-                                            )
-                                    }
-                                    
+                            if (description_state){
+                                var description = m[0].slice(12);
+                                if (description.length > 4096){
+                                    return channel.send({
+                                        embeds : [errornotif
+                                            .setTitle('Embed description exceeded 4096 characters.')
+                                            .setColor('#dc661f')
+                                        ]
+                                    }).then(msg => {setTimeout(() => msg.delete(), 10000)});
                                 }
-                                var row = new Discord.MessageActionRow()
-                                .addComponents(
-                                    buttoArray
-                                );
+                                embed.setDescription(description)
+                                m.shift();
+                                var embed_state = true
+                            }
+                        }
+    
+
+                        var one_row = (!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0);
+                        var multiple_row = (!m.length == 0 && m[m.length-1].startsWith("columns.") && (m.length-1) % 2 == 0);
+
+                        const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
+                        
+                        if (!one_row && !m.length == 0) {
+                            return channel.send({embeds : [embed
+                                .setTitle("Invalid buttons argument.")
+                                .setDescription("This message will be deleted in 10 seconds.")
+                                ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                        };
+                        console.log(m.length);
+
+                        if (one_row){
+                            for (var j = 1; j <= (m.length)/2; ++j) {
+                                buttoArray[j] = new Discord.MessageButton()
+                                .setLabel(m[j*2-2])
+                                .setStyle('LINK')
+                                .setURL(m[j*2-1])
+                            }
+                            var row = [new Discord.MessageActionRow()
+                            .addComponents(
+                                buttoArray
+                            )];
+                        } else if (multiple_row) {
+                            var row = [];
+                            var columns = parseInt(m[m.length-1].slice(8));
+                            var row_amount = Math.ceil(((m.length-1)/2)/columns);
+    
+                            var l = m.length-1;
+                            if (row_amount <= 5 && columns <= 5){
+                                for (var k = 0; k < row_amount; ++k) {
+                                    var buttoArray = [];
+    
+                                    for (var j = ((columns*2)*k); (j < ((columns*2)*k)+(columns*2)); j+=2) {
+                                        buttoArray.push(new Discord.MessageButton()
+                                            .setLabel(m[j])
+                                            .setStyle('LINK')
+                                            .setURL(m[j+1])
+                                        );
+                                        l -= 2;
+                                        if (l <= 0){
+                                            break
+                                        }
+                                    }
+    
+                                    row[k] = new Discord.MessageActionRow()
+                                        .addComponents(
+                                            buttoArray
+                                        );
+                                }
+                            } else {
+                                return
+                            }
+                        }
+                        
+                        if ((multiple_row || one_row) && (embed_state)) {
                                 msg.edit({
                                     embeds : [embed],
-                                    components: [row]
-                                })
-    
-                            } else {
+                                    components: row
+                            })
+                        } else if (multiple_row || one_row){
+                                msg.edit({
+                                    components: row
+                            })
+                        } else {
                                 msg.edit({
                                     embeds : [embed]
-                                })
-                            }
-                        //})
+                            })
+                        }
+                        
                     }
             }
         }

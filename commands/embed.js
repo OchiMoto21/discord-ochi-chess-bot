@@ -17,7 +17,6 @@ module.exports = {
                             for(var i = 0; i < parseInt(str.length); ++i){
                                     var m = String(str[i]).split(" ");
                                     var command = client.commands.get('embed');
-                                    console.log(m);
                                     command.execute(message,m,'embed',client,Discord);
 
                             }
@@ -29,17 +28,17 @@ module.exports = {
                     var embed = new Discord.MessageEmbed();
                     var errornotif = new Discord.MessageEmbed();
 
-                    const m = args.join(" ").split(delimiter);
+                    const m = args.join(" ").split(delimiter).map(Function.prototype.call, String.prototype.trim).filter(e =>  e);
                 
-                    var image = ""; 
-                    var title = ""; 
+                    var image = "";
+                    var title = "";
                     var description_state = false;
                     var title_state = false;
                     var embed_state = false;
                     var channel = message.channel;
-
+                    
                     while (!m.length == 0 && (m[0].startsWith("title.")||m[0].startsWith("image.")||m[0].startsWith("color.")||m[0].startsWith("description."))){
-                        var embed_state = true
+                        
                         var title_state = m[0].startsWith("title.");
                         var image_state = m[0].startsWith("image.");
                         var color_state = m[0].startsWith("color.")
@@ -57,6 +56,7 @@ module.exports = {
                                 }).then(msg => {setTimeout(() => msg.delete(), 10000)});
                             }
                             embed.setTitle(title.slice(6))
+                            var embed_state = true
                         }
                     
                         if (image_state){
@@ -69,6 +69,7 @@ module.exports = {
                                     ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                             }
                             embed.setImage(image)
+                            var embed_state = true
                         } 
                     
                         if(color_state){
@@ -79,6 +80,7 @@ module.exports = {
                                     ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                             }
                             var color = m[0];
+                            console.log("color set")
                             embed.setColor(color.slice(6))
                             m.shift();
                         }
@@ -95,6 +97,7 @@ module.exports = {
                             }
                             embed.setDescription(description)
                             m.shift();
+                            var embed_state = true
                         }
                     }
                     
@@ -111,79 +114,73 @@ module.exports = {
                     console.log(m.length);
                     
                     var one_row = (!m.length == 0 && m.length/2 <= 5 && m.length % 2 == 0);
-
-                    const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
+                    var multiple_row = (!m.length == 0 && m[m.length-1].startsWith("columns.") && (m.length-1) % 2 == 0);
                     
-                    if (!one_row && !m.length == 0) {
+                    const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
+                    console.log(m);
+                    if (!(one_row || multiple_row)) {
                         return channel.send({embeds : [errornotif
                             .setTitle("Invalid buttons argument.")
                             .setDescription("This message will be deleted in 10 seconds.")
                             ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
                     }
-                    
-                    
-                    if(one_row){
-                        console.log(regex);
-                        for (var j = 0; j < (m.length); j += 2) {
-                            if (!isValidURL(m[j+1].trim())){
-                                return channel.send({embeds : [errornotif
-                                    .setTitle("Not a valid button URL.")
-                                    .setDescription("This message will be deleted in 10 seconds.")
-                                    ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                            }
-                            if (m[j].length > 80 && !(regex.test(m[j]))){
-                                return channel.send({
-                                    embeds : [errornotif
-                                        .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters.')
-                                        .setColor('#dc661f')
-                                    ]
-                                }).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                            }  
-                            if (regex.test(m[j])){
-                                var groups = m[j].trim().match(regex).groups;
-                                if(!(groups.buttonLabel.length > 80)){
-                                    buttoArray.push(new Discord.MessageButton()
-                                        .setLabel(groups.buttonLabel)
-                                        .setStyle('LINK')
-                                        .setURL(m[j+1].trim())
-                                        .setEmoji(groups.emojiID)
-                                        )                                
-                                } else {
-                                    return channel.send({
-                                        embeds : [errornotif
-                                            .setTitle('|'+m[j]+'| button\'s label exceeded 80 characters')
-                                            .setColor('#dc661f')
-                                        ]
-                                    }).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                                }
-                            } else {
-                                
-                                buttoArray.push(new Discord.MessageButton()
-                                    .setLabel(m[j].trim())
-                                    .setStyle('LINK')
-                                    .setURL(m[j+1].trim())
-                                    )
-                            }
-                            
+
+
+                    if (one_row){
+                        for (var j = 1; j <= (m.length)/2; ++j) {
+                            buttoArray[j] = new Discord.MessageButton()
+                            .setLabel(m[j*2-2])
+                            .setStyle('LINK')
+                            .setURL(m[j*2-1].trim())
                         }
-                        var row = new Discord.MessageActionRow()
+                        var row = [new Discord.MessageActionRow()
                         .addComponents(
                             buttoArray
-                            );
-                        if (embed_state){
-                            return channel.send({
-                                embeds : [embed],
-                                components: [row]
-                            
-                            })
+                        )];
+                    } else if (multiple_row) {
+                        var row = [];
+                        var columns = parseInt(m[m.length-1].slice(8));
+                        var row_amount = Math.ceil(((m.length-1)/2)/columns);
+
+                        var l = m.length-1;
+                        if (row_amount <= 5 && columns <= 5){
+                            for (var k = 0; k < row_amount; ++k) {
+                                var buttoArray = [];
+
+                                for (var j = ((columns*2)*k); (j < ((columns*2)*k)+(columns*2)); j+=2) {
+                                    buttoArray.push(new Discord.MessageButton()
+                                        .setLabel(m[j])
+                                        .setStyle('LINK')
+                                        .setURL(m[j+1].trim())
+                                    );
+                                    l -= 2;
+                                    if (l <= 0){
+                                        break
+                                    }
+                                }
+
+                                row[k] = new Discord.MessageActionRow()
+                                    .addComponents(
+                                        buttoArray
+                                    );
+                            }
+                        } else {
+                            return
                         }
-                        return channel.send({
-                                    components: [row]
-                                })
+                    }
+
+                    if ((multiple_row || one_row) && (embed_state)) {
+                            message.channel.send({
+                                embeds : [embed],
+                                components: row
+                        })
+                    } else if (multiple_row || one_row){
+                            message.channel.send({
+                                components: row
+                        })
                     } else {
-                        return channel.send({
-                            embeds : [embed],
-                            components: []
+                            message.channel.send({
+                                embeds : [embed]
                         })
                     }
                 }
