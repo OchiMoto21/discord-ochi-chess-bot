@@ -119,10 +119,16 @@ module.exports = {
 
                     if (one_row){
                         for (var j = 1; j <= (m.length)/2; ++j) {
+                            if (!isValidURL(m[j*2-1].trim())){
+                                return channel.send({embeds : [errornotif
+                                    .setTitle("Not a valid button URL.")
+                                    .setDescription("This message will be deleted in 10 seconds.")
+                                    ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                            }
                             buttoArray[j] = new Discord.MessageButton()
                             .setLabel(m[j*2-2])
                             .setStyle('LINK')
-                            .setURL(m[j*2-1])
+                            .setURL(m[j*2-1].trim())
                         }
                         var row = [new Discord.MessageActionRow()
                         .addComponents(
@@ -139,10 +145,16 @@ module.exports = {
                                 var buttoArray = [];
 
                                 for (var j = ((columns*2)*k); (j < ((columns*2)*k)+(columns*2)); j+=2) {
+                                    if (!isValidURL(m[j+1].trim())){
+                                        return channel.send({embeds : [errornotif
+                                            .setTitle("Not a valid button URL.")
+                                            .setDescription("This message will be deleted in 10 seconds.")
+                                            ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
+                                    }
                                     buttoArray.push(new Discord.MessageButton()
                                         .setLabel(m[j])
                                         .setStyle('LINK')
-                                        .setURL(m[j+1])
+                                        .setURL(m[j+1].trim())
                                     );
                                     l -= 2;
                                     if (l <= 0){
