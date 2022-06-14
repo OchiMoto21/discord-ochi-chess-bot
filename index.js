@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const config = require('./config.json');
+//const config = require('./config.json');
 //require('./deploy_command.js')
 
 const client = new Discord.Client({
@@ -16,6 +16,6 @@ client.events = new Discord.Collection();
     require(`./handlers/${handler}`)(client, Discord);
 })
 
-client.login(config.TOKEN);
-//client.login(process.env.DJS_TOKEN);
-client.mongodbLogin();
+//client.login(config.TOKEN);
+client.login(process.env.DJS_TOKEN);
+//client.mongodbLogin();
