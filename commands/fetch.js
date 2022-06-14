@@ -5,16 +5,27 @@ module.exports = {
     async execute(message, args, cmd, client, Discord){
         var embed = new Discord.MessageEmbed()
         if(message.author.id=="656974081140326401"){
-            try {
-                const fetched_messages = await message.channel.messages.fetch({ limit: parseInt(args[0])+1 })
-                for (let [key, value] of fetched_messages) {
-                    console.log(value,!(value.author.bot));
-                    if (value.content.includes('<:kaelabonk:956580833374928937>') && !value.author.bot){
-                                var command = client.commands.get('kaelabonk');
-                                command.execute(value,'','kaelabonk',client,Discord);
-                            }
-            
+                if (args[0] == "message"){
+                    var chnl = await client.channels.fetch(args[1])
+                    var msg = await chnl.messages.fetch(args[2])
+                    if (msg.content.includes('<:kaelabonk:956580833374928937>') && !msg.author.bot){
+                        var command = client.commands.get('kaelabonk');
+                        command.execute(msg,'','kaelabonk',client,Discord);
+                    }
+                    return;
                 }
+            
+                const fetched_messages = await message.channel.messages.fetch({ limit: parseInt(args[0])+1 })
+                fetched_messages.forEach(async message => {
+                    
+                    console.log(message,!(message.author.bot));
+                    if (message.content.includes('<:kaelabonk:956580833374928937>') && !message.author.bot){
+                                var command = client.commands.get('kaelabonk');
+                                command.execute(message,'','kaelabonk',client,Discord);
+                            }
+                });
+            
+                
                     
                 // messages.forEach(message => {
                 //     if (message.content.includes('<:kaelabonk:956580833374928937>') && !message.author.bot){
@@ -23,10 +34,7 @@ module.exports = {
                 //     }
     
                 // });
-            }
-            catch {
-                console.error
-            }
+            
         }
     }
 }

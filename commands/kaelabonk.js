@@ -8,7 +8,7 @@ module.exports = {
         var embed = new Discord.MessageEmbed()
         if(message.channel.id == "825593098187833344"||message.channel.id=="966341480186789918"|| message.channel.id=="918356347605643290"){
             console.log("Testing KaelaBonk")
-            const KaelaBonkLevelPlayer = await client.createBonkLevel(message.member);
+            const KaelaBonkLevelPlayer = await client.createBonkLevel(message.author);
             console.log(KaelaBonkLevelPlayer)
             var condition = ["succeed","failed"];
             if (KaelaBonkLevelPlayer.level == 0){
