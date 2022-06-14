@@ -18,4 +18,4 @@ client.events = new Discord.Collection();
 
 //client.login(config.TOKEN);
 client.login(process.env.DJS_TOKEN);
-//client.mongodbLogin();
+client.mongodbLogin();
