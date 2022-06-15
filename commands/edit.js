@@ -113,12 +113,12 @@ module.exports = {
 
                     const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
                     
-                    if (!one_row && !m.length == 0) {
+                    if (!(one_row || multiple_row)) {
                         return channel.send({embeds : [errornotif
                             .setTitle("Invalid buttons argument.")
                             .setDescription("This message will be deleted in 10 seconds.")
                             ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
-                    };
+                    }
                     console.log(m.length);
 
                     if (one_row){
