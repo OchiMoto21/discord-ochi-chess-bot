@@ -29,6 +29,7 @@ module.exports = {
                 } else {
                     var buttoArray = [];
                     const m = args.join(" ").split(delimiter).map(Function.prototype.call, String.prototype.trim).filter(e =>  e);
+                    var embed = new Discord.MessageEmbed();
 
                     var channelID = m[0];
                     var messageID = m[1];
@@ -37,9 +38,12 @@ module.exports = {
                     var channel = message.channel;
                     var chnl = await client.channels.fetch(channelID)
                     var msg = await chnl.messages.fetch(messageID)
-
-                    var embed = msg.embeds[0];
-                    while (!m.length == 0 && (m[0].startsWith("title.")||m[0].startsWith("image.")||m[0].startsWith("color.")||m[0].startsWith("description."))){
+                    console.log(msg)
+                    var embed_state = !(msg.embeds.length == 0)
+                    if (embed_state){
+                        var embed = msg.embeds[0];
+                    }
+                    while (embed_state && !m.length == 0 && (m[0].startsWith("title.")||m[0].startsWith("image.")||m[0].startsWith("color.")||m[0].startsWith("description."))){
                     
                         var title_state = m[0].startsWith("title.");
                         var image_state = m[0].startsWith("image.");
@@ -110,7 +114,7 @@ module.exports = {
                     const regex = /^(?:<:|<a:)(?<emojiName>\w+):(?<emojiID>\d+)>(?<buttonLabel>.+|)$/;
                     
                     if (!one_row && !m.length == 0) {
-                        return channel.send({embeds : [embed
+                        return channel.send({embeds : [errornotif
                             .setTitle("Invalid buttons argument.")
                             .setDescription("This message will be deleted in 10 seconds.")
                             ]}).then(msg => {setTimeout(() => msg.delete(), 10000)});
