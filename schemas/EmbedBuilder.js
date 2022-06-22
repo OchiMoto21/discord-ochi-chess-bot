@@ -16,7 +16,13 @@ const EmbedBuilderSchema = new mongoose.Schema({
             }],
             image:{
                 url: {type:String, default:null}
-            }
+            },
+            timestamp: {type: Date, default:null},
+            footer: {
+                text: {type:String, default:null},
+                icon_url: {type:String, default:null},
+            },
+        
         },
         button: [{
             label: String, 

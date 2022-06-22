@@ -29,7 +29,13 @@ module.exports = {
                                 break;
                             case "field":
                                 if (oneMessage[args[0]][args[1]].length >= parseInt(args[2]))
-                                    oneMessage[args[0]][args[1]].splice(0,parseInt(args[2]-1))
+                                    oneMessage[args[0]][args[1]].splice(parseInt(args[2])-1,1);
+                                break;
+                            case "footer":
+                                oneMessage[args[0]][args[1]] = {
+                                        text: null,
+                                        icon_url: null,
+                                    }
                                 break;
                             default:
                                 oneMessage[args[0]][args[1]] = null;
@@ -43,13 +49,19 @@ module.exports = {
                             field:[],
                             image:{
                                 url: null
-                            }
+                            },
+                            timestamp: null,
+                            footer: {
+                                text: null,
+                                icon_url: null,
+                            },
                         };
                     }
                     break;
                 case "button":
                     if (oneMessage[args[0]].length >= parseInt(args[1]))
-                        oneMessage[args[0]].splice(0,parseInt(args[1]-1))
+                        console.log(oneMessage[args[0]])
+                        oneMessage[args[0]].splice(parseInt(args[1])-1, 1);
                     break;
             }
 
@@ -58,6 +70,8 @@ module.exports = {
         } else {
             console.log("message not found")
         }
+        console.log("saved")
+
         await EmbedBuilderUser.save().catch(err=> console.log(err));
 
     }

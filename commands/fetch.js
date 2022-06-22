@@ -14,27 +14,17 @@ module.exports = {
                     }
                     return;
                 }
-            
-                const fetched_messages = await message.channel.messages.fetch({ limit: parseInt(args[0])+1 })
-                fetched_messages.forEach(async message => {
-                    
-                    console.log(message,!(message.author.bot));
-                    if (message.content.includes('<:kaelabonk:956580833374928937>') && !message.author.bot){
-                                var command = client.commands.get('kaelabonk');
-                                command.execute(message,'','kaelabonk',client,Discord);
-                            }
-                });
-            
-                
-                    
-                // messages.forEach(message => {
-                //     if (message.content.includes('<:kaelabonk:956580833374928937>') && !message.author.bot){
-                //         var command = client.commands.get('kaelabonk');
-                //         command.execute(message,'','kaelabonk',client,Discord);
-                //     }
-    
-                // });
-            
+                if (Number.isInteger(parseInt(args[0]))){
+                    const fetched_messages = await message.channel.messages.fetch({ limit: parseInt(args[0])+1 })
+                    fetched_messages.forEach(async message => {
+                        
+                        console.log(message,!(message.author.bot));
+                        if (message.content.includes('<:kaelabonk:956580833374928937>') && !message.author.bot){
+                                    var command = client.commands.get('kaelabonk');
+                                    command.execute(message,'','kaelabonk',client,Discord);
+                                }
+                    });
+                }
         }
     }
 }

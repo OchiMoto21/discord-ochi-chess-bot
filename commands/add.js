@@ -5,10 +5,13 @@ module.exports = {
     aliases: [],
     description: "This command will embed or return a button",
     async execute(message, args, cmd, client, Discord){
-        console.log('Embedv2!');
-        const EmbedBuilderUser = await client.createEmbedBuilder(message.guild,message.member);
+        console.log('Embedv2! add');
+
+        const EmbedBuilderUser = await client.createEmbedBuilder(message.guild,message.author);
         
         let title = client.titleDoko(args.join(" "))[0];
+        console.log(title);
+
         args = client.titleDoko(args.join(" "))[1];
         let m = args;
         let messages = EmbedBuilderUser.messages;
@@ -29,6 +32,9 @@ module.exports = {
                         case "color":
                             if (args[2].match(/^#(?:[0-9a-fA-F]{3}){1,2}$/g) !== null)
                                 oneMessage[args[0]][args[1]] = m.slice(2).join(" ");
+                        case "footer":
+                            oneMessage[args[0]][args[1]][args[2]] = m.slice(3).join(" ");
+                            break;
                         default:
                             console.log(oneMessage[args[0]][args[1]],m.slice(2).join(" "));
                             oneMessage[args[0]][args[1]] = m.slice(2).join(" ");

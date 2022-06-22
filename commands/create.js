@@ -5,7 +5,7 @@ module.exports = {
     aliases: [],
     description: "This command will embed or return a button",
     async execute(message, args, cmd, client, Discord){
-        console.log('Embedv2!');
+        console.log('Embedv2! create');
         const EmbedBuilderUser = await client.createEmbedBuilder(message.guild,message.member);
         console.log(args);
         let title = client.titleDoko(args.join(" "))[0];
