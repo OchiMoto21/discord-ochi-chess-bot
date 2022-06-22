@@ -13,11 +13,25 @@ module.exports = (client, Discord) => {
             .setURL(button.link)
             )
         });
-        if (buttonArray.length >= 1){
+        if (buttonArray.length >= 1 && buttonArray.length <= 5){
             var row = [new Discord.MessageActionRow()
                 .addComponents(
                     buttonArray
                 )]
+            return row;
+        } else if (buttonArray.length >= 5 && buttonArray.length <= 5){
+            var rowofButton = [];
+            var row = [];
+            buttonArray.forEach(element =>{
+                rowofButton.push(element)
+                if(buttonArray.indexOf(element)+1 % 5 == 0){
+                    row.push(new Discord.MessageActionRow()
+                        .addComponents(
+                            rowofButton
+                        ))
+                    rowofButton = [];
+                }
+            })
             return row;
         } else {
             return null;

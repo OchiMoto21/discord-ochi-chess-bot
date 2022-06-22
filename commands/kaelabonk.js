@@ -94,9 +94,6 @@ module.exports = {
     }
 }
 
-function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-}
 function bonkRequired(level, bonk_count) {
     return (upgrade_bonk_count(level)-bonk_count)+1
 }
