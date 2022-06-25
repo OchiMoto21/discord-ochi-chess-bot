@@ -18,5 +18,5 @@ handlers_files.forEach(handler =>{
     require(`./handlers/${handler}`)(client, Discord);
 })
 
-client.login(process.env.DJS_TOKEN);
 client.mongodbLogin();
+client.login(process.env.DJS_TOKEN);

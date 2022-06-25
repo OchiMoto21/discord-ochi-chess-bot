@@ -26,7 +26,9 @@ module.exports = {
             
             var upgradeBonkCount = upgrade_bonk_count(KaelaBonkLevelPlayer.level)
             var upgrade = (KaelaBonkLevelPlayer.bonk_count >= upgradeBonkCount)
-    
+            var succeedEmbed = {
+                
+            }
             if(upgrade){
                 // You have reach the amount of bonk for an upgrade!
                 // An upgrade have been successfully made <a:kaelayaay:957292452660772914>
