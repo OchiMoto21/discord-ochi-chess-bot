@@ -8,7 +8,7 @@ module.exports = {
                 if (args[0] == "message"){
                     var chnl = await client.channels.fetch(args[1]);
                     var msg = await chnl.messages.fetch(args[2]);
-                    console.log(msg,!(message.author.bot));
+                    console.log(msg.components[0].components,!(message.author.bot));
                     if (msg.content.includes('<:kaelabonk:956580833374928937>') && !msg.author.bot){
                         var command = client.commands.get('kaelabonk');
                         command.execute(msg,'','kaelabonk',client,Discord);

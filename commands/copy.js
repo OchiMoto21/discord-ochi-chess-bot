@@ -55,10 +55,9 @@ module.exports = {
             console.log(msg.components[j])
             for (var i = 0; i < msg.components[j].components.length;i++) {
                 console.log(msg.components[j].components[i])
-                if (!msg.components[j].components[i].style == 'LINK') return;
+                if (!msg.components[j].components[i].style == 'LINK') continue;
                 arg = ["\""+title+"\"", "button",'{"label":"'+ msg.components[j].components[i].label+'","link":"'+msg.components[j].components[i].url+'"}'].join(" ").split(" ");
                 await add.execute(message,arg,'add',client,Discord);
-                break;
             }
         }
         
