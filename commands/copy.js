@@ -16,9 +16,52 @@ module.exports = {
         var create = client.commands.get('create');
         await create.execute(message,["\""+title+"\""],'create',client,Discord);
         
-        var arg = ["\""+title+"\"", "embed", "description", msg.content].join(" ").split(" ");
+        var arg = "";
         console.log(arg);
         var add = client.commands.get('add');
-        await add.execute(message,arg,'add',client,Discord);
+        for (var j = 0;j < msg.embeds.length; j++){
+            for (const property in msg.embeds[j]) {
+                if (msg.embeds[0][property] == null) continue;
+                if (!["title","color","description","field","image","footer"].includes(`${property}`)) continue;
+                switch (`${property}`){
+                    case "image":
+                        arg = ["\""+title+"\"", "embed",`${property}`, msg.embeds[0][property]["url"]].join(" ").split(" ");
+                        await add.execute(message,arg,'add',client,Discord);
+                        break;
+                    case "field":
+                        for (var i = 0;i < msg.embeds[0][property].length; i++){
+                            arg = ["\""+title+"\"", "embed",`${property}`, JSON.stringify(msg.embeds[0][property][i])].join(" ").split(" ");
+                            await add.execute(message,arg,'add',client,Discord);
+                        }
+                        break;
+                    case "color":
+                        arg = ["\""+title+"\"", "embed",`${property}`, msg.embeds[0][property]].join(" ").split(" ");
+                        break;
+                    case "footer":
+                        for (const field_property in msg.embeds[0][property]){
+                            arg = ["\""+title+"\"", "embed",`${property}`, `${field_property}`,JSON.stringify(msg.embeds[0][property][field_property])].join(" ").split(" ");
+                            await add.execute(message,arg,'add',client,Discord);
+                        }
+                        break;
+                    default:
+                        arg = ["\""+title+"\"", "embed",`${property}`, msg.embeds[0][property]].join(" ").split(" ");
+                        await add.execute(message,arg,'add',client,Discord);
+                        break;
+                }
+            }
         }
+        for (var j = 0;j < msg.components.length; j++){
+            for (var i = 0; i< msg.components[j].components.length;i++) {
+                if (!msg.components[j].components[i].style == 'LINK') return;
+                arg = ["\""+title+"\"", "button","{label"+ msg.components[j].components[i].label+",url:"+msg.components[j].components[i].url+"}"].join(" ").split(" ");
+                await add.execute(message,arg,'add',client,Discord);
+                break;
+            }
+        }
+        
+    }
+}
+
+function arraytoData(field,array) {
+    
 }

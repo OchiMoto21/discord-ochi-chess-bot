@@ -1,4 +1,5 @@
 module.exports = (Discord, client, message) => {
+    if(!message.channel.id == '825593098187833344') return;
     const prefix = '&';
     if(message.content.includes('<:kaelabonk:956580833374928937>') && !message.author.bot){
         const command = client.commands.get("kaelabonk");
