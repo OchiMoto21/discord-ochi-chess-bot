@@ -30,9 +30,8 @@ module.exports = {
                             oneMessage[args[0]][args[1]].push(JSON.parse(m.slice(2).join(" ")));
                             break;
                         case "color":
-                            if (args[2].match(/^#(?:[0-9a-fA-F]{3}){1,2}$/g) !== null)
-                                oneMessage[args[0]][args[1]] = m.slice(2).join(" ");
-                                break;
+                            if (Number.isInteger(parseInt(m.slice(2).join(" ")))) {oneMessage[args[0]][args[1]] = parseInt(m.slice(2).join(" ")).toString(16); break;}
+                            if (args[2].match(/^#(?:[0-9a-fA-F]{3}){1,2}$/g) !== null) {oneMessage[args[0]][args[1]] = m.slice(2).join(" "); break;}
                         case "footer":
                             if (args[2]=="icon_url") {
                                     if (!client.isValidURL(m.slice(3).join(" ").trim())) return;

@@ -10,8 +10,8 @@ module.exports = {
         var id = args[0].split("/");
         if(!(id[id.length-1].length == 18 && id[id.length-2].length == 18)) return;
         
-        var chnl = await client.channels.fetch(id[id.length-2]).catch(err=> console.log(err));
-        var msg = await chnl.messages.fetch(id[id.length-1]).catch(err=> console.log(err));
+        var chnl = await client.channels.fetch(id[id.length-2]);
+        var msg = await chnl.messages.fetch(id[id.length-1]);
         console.log(msg);
         var create = client.commands.get('create');
         await create.execute(message,["\""+title+"\""],'create',client,Discord);
@@ -36,6 +36,7 @@ module.exports = {
                         break;
                     case "color":
                         arg = ["\""+title+"\"", "embed",`${property}`, msg.embeds[0][property]].join(" ").split(" ");
+                        await add.execute(message,arg,'add',client,Discord);
                         break;
                     case "footer":
                         for (const field_property in msg.embeds[0][property]){
@@ -64,6 +65,3 @@ module.exports = {
     }
 }
 
-function arraytoData(field,array) {
-    
-}

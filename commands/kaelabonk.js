@@ -43,7 +43,13 @@ module.exports = {
                             { name :"Bonk needed for upgrade", value: `<a:kaelanumahammer:962582163251949578> ${bonkRequired(KaelaBonkLevelPlayer.level,KaelaBonkLevelPlayer.bonk_count)} bonk(s)`},
                         )
                         .setThumbnail(message.author.avatarURL())
-                    ]})
+                    ]}).catch(err => {
+                        console.log(err);
+                        if (err instanceof Discord.HTTPError) {
+                            setTimeout(() => command.execute(message, args, cmd, client, Discord), 10000)
+                        }
+                        return;
+                    });
                 }
                 // You have reach the amount of bonk for an upgrade!
                 // Unfortunately, your upgrade failed
@@ -59,7 +65,13 @@ module.exports = {
                             { name :"Bonk needed for upgrade", value: `<a:kaelanumahammer:962582163251949578> ${bonkRequired(KaelaBonkLevelPlayer.level,KaelaBonkLevelPlayer.bonk_count)} bonk(s)`},
                         )
                         .setThumbnail(message.author.avatarURL())
-                    ]})
+                    ]}).catch(err => {
+                        console.log(err);
+                        if (err instanceof Discord.HTTPError) {
+                            setTimeout(() => command.execute(message, args, cmd, client, Discord), 10000)
+                        }
+                        return;
+                    });
                 }
             } else {
                 if (result =="succeed"){
@@ -74,7 +86,13 @@ module.exports = {
                             { name :"Bonk needed for upgrade", value: `<a:kaelanumahammer:962582163251949578> ${bonkRequired(KaelaBonkLevelPlayer.level,KaelaBonkLevelPlayer.bonk_count)} bonk(s)`},
                         )
                         .setThumbnail(message.author.avatarURL())
-                    ]})
+                    ]}).catch(err => {
+                        console.log(err);
+                        if (err instanceof Discord.HTTPError) {
+                            setTimeout(() => command.execute(message, args, cmd, client, Discord), 10000)
+                        }
+                        return;
+                    });
                 }
                 if (result =="failed"){
                     console.log("00")
@@ -87,7 +105,13 @@ module.exports = {
                             { name :"Bonk needed for upgrade", value: `<a:kaelanumahammer:962582163251949578> ${bonkRequired(KaelaBonkLevelPlayer.level,KaelaBonkLevelPlayer.bonk_count)} bonk(s)`},
                         )
                         .setThumbnail(message.author.avatarURL())
-                    ]})
+                    ]}).catch(err => {
+                        console.log(err);
+                        if (err instanceof Discord.HTTPError) {
+                            setTimeout(() => command.execute(message, args, cmd, client, Discord), 10000)
+                        }
+                        return;
+                    });
                 }
             }
         }

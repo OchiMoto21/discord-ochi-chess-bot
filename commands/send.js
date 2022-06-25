@@ -75,8 +75,12 @@ module.exports = {
                     };
                 }
                 if (cmd == "edit"){
-                    var chnl = await client.channels.fetch(args[0]).catch(err=> console.log(err));
-                    var msg = await chnl.messages.fetch(args[1]).catch(err=> console.log(err));
+                    if (!client.isValidURL(args[0])) return;
+                    var id = args[0].split("/");
+                    if(!(id[id.length-1].length == 18 && id[id.length-2].length == 18)) return;
+                    
+                    var chnl = await client.channels.fetch(id[id.length-2]);
+                    var msg = await chnl.messages.fetch(id[id.length-1]);
                     try {
                         await msg.edit({
                             embeds: [oneMessage.embed],
