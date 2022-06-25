@@ -6,8 +6,9 @@ module.exports = {
         var embed = new Discord.MessageEmbed()
         if(message.author.id=="656974081140326401"){
                 if (args[0] == "message"){
-                    var chnl = await client.channels.fetch(args[1])
-                    var msg = await chnl.messages.fetch(args[2])
+                    var chnl = await client.channels.fetch(args[1]);
+                    var msg = await chnl.messages.fetch(args[2]);
+                    console.log(msg,!(message.author.bot));
                     if (msg.content.includes('<:kaelabonk:956580833374928937>') && !msg.author.bot){
                         var command = client.commands.get('kaelabonk');
                         command.execute(msg,'','kaelabonk',client,Discord);
