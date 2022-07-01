@@ -1,9 +1,7 @@
-const EmbedBuilder = require('../schemas/EmbedBuilder');
-
 module.exports = {
     name: 'add',
     aliases: [],
-    description: "This command will embed or return a button",
+    description: "This command will add an embed or button to a created message",
     async execute(message, args, cmd, client, Discord){
         console.log('Embedv2! add');
 
@@ -23,7 +21,7 @@ module.exports = {
                 case "embed":
                     switch (args[1]){
                         case "image":
-                            if (isValidURL(m.slice(2).join(" ").trim())) 
+                            if (client.isValidURL(m.slice(2).join(" ").trim())) 
                                 oneMessage[args[0]][args[1]]["url"] = m.slice(2).join(" ").trim();
                             break;
                         case "field":
@@ -32,11 +30,15 @@ module.exports = {
                         case "color":
                             if (Number.isInteger(parseInt(m.slice(2).join(" ")))) {oneMessage[args[0]][args[1]] = parseInt(m.slice(2).join(" ")).toString(16); break;}
                             if (args[2].match(/^#(?:[0-9a-fA-F]{3}){1,2}$/g) !== null) {oneMessage[args[0]][args[1]] = m.slice(2).join(" "); break;}
+                        case "author":
                         case "footer":
-                            if (args[2]=="icon_url") {
+                            if (args[2]=="icon_url" || args[2]=="url") {
                                     if (!client.isValidURL(m.slice(3).join(" ").trim())) return;
                                 }
                             oneMessage[args[0]][args[1]][args[2]] = m.slice(3).join(" ");
+                            break;
+                        case "timestamp":
+                            oneMessage[args[0]][args[1]] = new Date.now();
                             break;
                         default:
                             console.log(oneMessage[args[0]][args[1]],m.slice(2).join(" "));
@@ -54,7 +56,3 @@ module.exports = {
         }
     }
 }
-function isValidURL(string) {
-    var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-    return (res !== null)
-};

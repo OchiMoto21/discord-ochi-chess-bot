@@ -2,7 +2,7 @@ const EmbedBuilder = require('../schemas/EmbedBuilder')
 const mongoose = require('mongoose')
 module.exports = (client) => {
     client.createEmbedBuilder = async (guild,member) =>{
-        let EmbedBuilderUser = await EmbedBuilder.findOne({memberId: member.id})
+        let EmbedBuilderUser = await EmbedBuilder.findOne({guildId:guild.id, memberId: member.id})
         if (EmbedBuilderUser){
             return EmbedBuilderUser;
         } else {

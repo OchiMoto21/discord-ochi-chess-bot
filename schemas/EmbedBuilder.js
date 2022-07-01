@@ -6,21 +6,65 @@ const EmbedBuilderSchema = new mongoose.Schema({
     messages: [{
         name : String,
         embed: {
-            title: {type : String, default: null},
+            title: {
+                type : String, 
+                default: null,
+                maxLength: 256
+            },
+            author: {
+                name: {
+                    type : String, 
+                    default: null,
+                    maxLength: 256
+                },
+                icon_url: {
+                    type : String, 
+                    default: null,
+                },
+                url: {
+                    type : String, 
+                    default: null,
+                },
+            },
             color: {type : String, default: null},
-            description: {type : String, default: null},
+            description: {
+                type : String, 
+                default: null,
+                maxLength: 4096
+            },
             field:[{
-                name: {type : String, default: null},
-                value: {type : String, default: null},
+                name: {
+                    type : String, 
+                    default: null,
+                    maxLength: 256
+                },
+                value: {
+                    type : String, 
+                    default: null,
+                    maxLength: 1024
+                },
                 inline: {type : String, default: null},
             }],
             image:{
-                url: {type:String, default:null}
+                url: {
+                    type:String, 
+                    default:null
+                }
             },
-            timestamp: {type: Date, default:null},
+            timestamp: {
+                type: Date, 
+                default: null
+            },
             footer: {
-                text: {type:String, default:null},
-                icon_url: {type:String, default:null},
+                text: {
+                    type :String, 
+                    default : null,
+                    maxLength : 2048
+                },
+                icon_url: {
+                    type : String, 
+                    default : null
+                },
             },
         
         },
