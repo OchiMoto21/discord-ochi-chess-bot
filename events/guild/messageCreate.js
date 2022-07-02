@@ -1,10 +1,10 @@
 
 module.exports = async (Discord, client, message) => {
-        const Member = await client.createMemberJoined(message.member);
-        if (!Member.Passed) {
-            Member.Passed = true;
-            await Member.save().catch(err => console.log(err));
-        } 
+        //const Member = await client.createMemberJoined(message.member);
+        //if (!Member.Passed) {
+        //    Member.Passed = true;
+        //    await Member.save().catch(err => console.log(err));
+        //} 
         const prefix = '&';
         if(message.content.includes('<:kaelabonk:956580833374928937>') && !message.author.bot){
             const command = client.commands.get("kaelabonk");
