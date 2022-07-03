@@ -1,26 +1,22 @@
 module.exports = async (Discord, client, member) => {
     await memberJoinedNotif (Discord,client,member).catch(err => console.log(err));
-    
-    const passes = await checkVibe(Discord,client,member).catch(err => console.log(err))
+    if (member.user.bot) return;
+    const passes = await checkVibe(Discord,client,member).catch(err => console.log(err));
 }
 
 const checkVibe = async (Discord,client,member) =>{
     const GuildSetting = await client.createGuildSettings(member);
+    if (GuildSetting.AccountAgeLimit == null || GuildSetting.AccountAgeLimit == undefined) return;
+    if (GuildSetting.TimeOut == null || GuildSetting.TimeOut == undefined) return;
 
     const Member = await client.createMemberJoined(member);
-
-    if (GuildSetting.AccountAgeLimit.getTime() == null || GuildSetting.AccountAgeLimit.getTime() == undefined) return;
-
-    Member["Passed"] = !(member.user.avatar == null && member.user.avatarURL() == null && (new Date().getTime() < (Member.CreatedAt.getTime() + GuildSetting.AccountAgeLimit.getTime())))
-    
+    Member["Passed"] = !(member.user.avatar == null && member.user.avatarURL() == null && (new Date().getTime() < (Member.CreatedAt.getTime() + GuildSetting.AccountAgeLimit.getTime())));
     await Member.save().catch(err => console.log(err));
     
-    if (GuildSetting.TimeOut.getTime() == null || GuildSetting.TimeOut.getTime() == undefined) return;
-    
-    console.log(Member);
-    console.log(GuildSetting);
-    console.log(member.kickable);
-    console.log(new Date().getTime() < (Member.CreatedAt.getTime() + GuildSetting.AccountAgeLimit.getTime()));
+    // console.log(Member);
+    // console.log(GuildSetting);
+    // console.log(member.kickable);
+    // console.log(new Date().getTime() < (Member.CreatedAt.getTime() + GuildSetting.AccountAgeLimit.getTime()));
     
     if (!Member["Passed"]) {
         console.log(GuildSetting.TimeOut.getTime());
@@ -32,6 +28,7 @@ const checkVibe = async (Discord,client,member) =>{
                 await member.kick();
                 await memberKickedNotif(Discord,client,member).catch(err => console.log(err));
             }
+            await MemberTimeRunsOut.remove().catch(err => console.log(err));
             return;
         },
             GuildSetting.TimeOut.getTime())
