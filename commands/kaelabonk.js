@@ -35,7 +35,7 @@ module.exports = {
                 if (result =="succeed"){
                     console.log("11")
                     await KaelaBonkLevel.findOneAndUpdate({_id:KaelaBonkLevelPlayer._id},{bonk_count: KaelaBonkLevelPlayer.bonk_count += 1, level:  KaelaBonkLevelPlayer.level += 1})
-                    return message.channel.send({embeds : [embed
+                    return await message.channel.send({embeds : [embed
                         .setImage('http://drive.google.com/uc?export=view&id=1dbdS2pWIGWIob1jU84Rf4AMuUC1Si56f')
                         .setTitle(`${message.author.tag}\nForging succeed!`)
                         .setDescription("You have reach the amount of successful bonk for an upgrade!\n") 
@@ -57,7 +57,7 @@ module.exports = {
                 // Unfortunately, your upgrade failed
                 if (result =="failed"){
                     console.log("10")
-                    return message.channel.send({embeds : [embed
+                    return await message.channel.send({embeds : [embed
                         .setImage('http://drive.google.com/uc?export=view&id=1exSrTK0XEEVNzrvL87IgRMTA9Qd0K5EP')
                         .setTitle(`${message.author.tag}\nForging Failed D:`)
                         .setDescription("You have reach the amount of bonk for an upgrade!\nUnfortunately, your upgrade failed <:kaelasob:956587823673274389>")
@@ -79,7 +79,7 @@ module.exports = {
                 if (result =="succeed"){
                     console.log("01")
                     await KaelaBonkLevel.findOneAndUpdate({_id:KaelaBonkLevelPlayer._id},{bonk_count: KaelaBonkLevelPlayer.bonk_count +=1})
-                    return message.channel.send({embeds : [embed
+                    return await message.channel.send({embeds : [embed
                         .setImage('http://drive.google.com/uc?export=view&id=1dbdS2pWIGWIob1jU84Rf4AMuUC1Si56f')
                         .setTitle(`${message.author.tag}\nForging succeed!`)
                         .addFields(
@@ -98,7 +98,7 @@ module.exports = {
                 }
                 if (result =="failed"){
                     console.log("00")
-                    return message.channel.send({embeds : [embed
+                    return await message.channel.send({embeds : [embed
                         .setImage('http://drive.google.com/uc?export=view&id=1exSrTK0XEEVNzrvL87IgRMTA9Qd0K5EP')
                         .setTitle(`${message.author.tag}\nForging Failed D:`)
                         .addFields(
