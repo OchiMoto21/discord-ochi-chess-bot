@@ -6,7 +6,7 @@ module.exports = {
     description: "This command will give your forging result",
     async execute(message, args, cmd, client, Discord){
         var embed = new Discord.MessageEmbed()
-        if(message.channel.id == "825593098187833344"||message.channel.id=="966341480186789918"){
+        if(message.channel.id == "825593098187833344"||message.channel.id=="966341480186789918" || message.channel.id=="918356347605643290"){
             console.log("Testing KaelaBonk")
             const KaelaBonkLevelPlayer = await client.createBonkLevel(message.author);
             console.log(KaelaBonkLevelPlayer)
