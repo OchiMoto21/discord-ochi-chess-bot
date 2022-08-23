@@ -19,17 +19,18 @@ module.exports = (client, Discord) => {
                     buttonArray
                 )]
             return row;
-        } else if (buttonArray.length >= 5 && buttonArray.length <= 5){
+        } else if (buttonArray.length > 5){
             var rowofButton = [];
             var row = [];
             buttonArray.forEach(element =>{
-                rowofButton.push(element)
-                if(buttonArray.indexOf(element)+1 % 5 == 0){
+                rowofButton.push(element);
+                if(parseInt(buttonArray.indexOf(element)+1) % 5 == 0 || buttonArray.indexOf(element)+1 == buttonArray.length){
                     row.push(new Discord.MessageActionRow()
                         .addComponents(
                             rowofButton
                         ))
-                    rowofButton = [];
+                        rowofButton = [];
+                    console.log(row);
                 }
             })
             return row;
