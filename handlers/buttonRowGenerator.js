@@ -12,12 +12,12 @@ module.exports = (client, Discord) => {
             .setStyle('LINK')
             .setURL(button.link)
             )
-        });
+        }); console.log(buttonArray);
         if (buttonArray.length >= 1 && buttonArray.length <= 5){
             var row = [new Discord.MessageActionRow()
                 .addComponents(
                     buttonArray
-                )]
+                )]; console.log(row);
             return row;
         } else if (buttonArray.length > 5){
             var rowofButton = [];
