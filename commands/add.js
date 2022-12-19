@@ -47,6 +47,7 @@ module.exports = {
                     }
                     break;
                 case "button":
+                    if (!client.isValidURL(JSON.parse(m.slice(1).join(" ")).link)) return message.react('❌');
                     oneMessage[args[0]].push(JSON.parse(m.slice(1).join(" ")));
                     break;
             }
