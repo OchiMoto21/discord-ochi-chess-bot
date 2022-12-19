@@ -18,6 +18,7 @@ module.exports = (client, Discord) => {
                 .addComponents(
                     buttonArray
                 )]
+            console.log(row);
             return row;
         } else if (buttonArray.length > 5){
             var rowofButton = [];
