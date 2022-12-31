@@ -3,7 +3,7 @@ module.exports = {
     name: 'set',
     aliases: [],
     description: "Command for setting each guild",
-    async execute(message, args, cmd, client, Discord){
+    async execute(message, args, cmd, client,   ){
         if (!message.member.permissions.has('ADMINISTRATOR')) return;
         const GuildSetting = await client.createGuildSettings(message.member);
         let m = args;
@@ -15,7 +15,10 @@ module.exports = {
             case "TimeOut":
                 GuildSetting[args[0]] = DateConstructor(m.slice(1).join(" ").trim());
                 break;
-            default:
+            case "welcomeBanner": // Image inputs WIP
+                console.log(message.attachments);
+                break;
+            default: // "LogChannel" "welcomeChannel" "welcomeMessage"
                 GuildSetting[args[0]] = m.slice(1).join(" ").trim();
                 break;
         }

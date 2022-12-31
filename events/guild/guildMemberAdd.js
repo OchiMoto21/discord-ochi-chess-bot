@@ -1,43 +1,22 @@
+const Canvas = require('@napi-rs/canvas');
+
 module.exports = async (Discord, client, member) => {
-    await memberJoinedNotif (Discord,client,member).catch(err => console.log(err));
+    const GuildSetting = await client.createGuildSettings(member);
+    await welcomeNotif (Discord,client,member,GuildSetting).catch(err => console.log(err));
+    await memberJoinedNotif (Discord,client,member,GuildSetting).catch(err => console.log(err));
     if (member.user.bot) return;
     const passes = await checkVibe(Discord,client,member).catch(err => console.log(err));
 }
 
-const checkVibe = async (Discord,client,member) =>{
-    const GuildSetting = await client.createGuildSettings(member);
-    if (GuildSetting.AccountAgeLimit == null || GuildSetting.AccountAgeLimit == undefined) return;
-    if (GuildSetting.TimeOut == null || GuildSetting.TimeOut == undefined) return;
 
-    const Member = await client.createMemberJoined(member);
-    Member["Passed"] = !(member.user.avatar == null && member.user.avatarURL() == null && (new Date().getTime() < (Member.CreatedAt.getTime() + GuildSetting.AccountAgeLimit.getTime())));
-    await Member.save().catch(err => console.log(err));
+const welcomeNotif = async (Discord,client,member,GuildSetting) => {
+    const canvas = Canvas.createCanvas(x,y)
+    const context = canvas.getContext('2d');
     
-    // console.log(Member);
-    // console.log(GuildSetting);
-    // console.log(member.kickable);
-    // console.log(new Date().getTime() < (Member.CreatedAt.getTime() + GuildSetting.AccountAgeLimit.getTime()));
-    
-    if (!Member["Passed"]) {
-        console.log(GuildSetting.TimeOut.getTime());
-        setTimeout(async () => {
-            const MemberTimeRunsOut = await client.createMemberJoined(member);
-            console.log(MemberTimeRunsOut.Passed);
-
-            if(member.kickable && (!MemberTimeRunsOut.Passed)){
-                await member.kick();
-                await memberKickedNotif(Discord,client,member).catch(err => console.log(err));
-            }
-            await MemberTimeRunsOut.remove().catch(err => console.log(err));
-            return;
-        },
-            GuildSetting.TimeOut.getTime())
-    }
-    
+    // AttachmentBuilder(buffer, { name: 'image.png' });
 }
 
-const memberJoinedNotif = async (Discord,client,member) =>{
-    const GuildSetting = await client.createGuildSettings(member);
+const memberJoinedNotif = async (Discord,client,member,GuildSetting) =>{
     
     if (GuildSetting.LogChannel == null || GuildSetting.LogChannel == undefined) return;
     
@@ -58,6 +37,34 @@ const memberJoinedNotif = async (Discord,client,member) =>{
         embeds : [joined]
     })
 }
+
+const checkVibe = async (Discord,client,member) =>{
+    const GuildSetting = await client.createGuildSettings(member);
+    if (GuildSetting.AccountAgeLimit == null || GuildSetting.AccountAgeLimit == undefined) return;
+    if (GuildSetting.TimeOut == null || GuildSetting.TimeOut == undefined) return;
+
+    const Member = await client.createMemberJoined(member);
+    Member["Passed"] = !(member.user.avatar == null && member.user.avatarURL() == null && (new Date().getTime() < (Member.CreatedAt.getTime() + GuildSetting.AccountAgeLimit.getTime())));
+    await Member.save().catch(err => console.log(err));
+        
+    if (!Member["Passed"]) {
+        console.log(GuildSetting.TimeOut.getTime());
+        setTimeout(async () => {
+            const MemberTimeRunsOut = await client.createMemberJoined(member);
+            console.log(MemberTimeRunsOut.Passed);
+
+            if(member.kickable && (!MemberTimeRunsOut.Passed)){
+                await member.kick();
+                await memberKickedNotif(Discord,client,member).catch(err => console.log(err));
+            }
+            await MemberTimeRunsOut.remove().catch(err => console.log(err));
+            return;
+        },
+            GuildSetting.TimeOut.getTime())
+    }
+    
+}
+
 
 const memberKickedNotif = async (Discord,client,member) =>{
     const GuildSetting = await client.createGuildSettings(member);

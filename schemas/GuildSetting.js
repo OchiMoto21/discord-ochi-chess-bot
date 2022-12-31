@@ -10,6 +10,16 @@ const GuildSettingsSchema = new mongoose.Schema({
     AccountAgeLimit: {
         type: Date,
         default: null
+    },
+    welcomeChannel : String,
+    welcomeMessage : {
+        type: String,
+        default: null
+    },
+    welcomeBanner : {
+        data : Buffer,
+        contentType : String,
+        default: null
     }
 });
 
