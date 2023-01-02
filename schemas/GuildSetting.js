@@ -17,20 +17,11 @@ const GuildSettingsSchema = new mongoose.Schema({
         default: null
     },
     welcomeBanner : {
-        name: {
-            type: String,
-            default: null
-        },
+        name: String,
         img:
         {
-            data: {
-                type: Buffer,
-                default: null
-            },
-            contentType: {
-                type: String,
-                default: null
-            }
+            data: Buffer,
+            contentType: String,
         }
     }
 });
