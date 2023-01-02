@@ -1,4 +1,5 @@
 const Canvas = require('@napi-rs/canvas');
+const { Message } = require('discord.js');
 
 module.exports = async (Discord, client, member) => {
     const GuildSetting = await client.createGuildSettings(member);
@@ -10,9 +11,47 @@ module.exports = async (Discord, client, member) => {
 
 
 const welcomeNotif = async (Discord,client,member,GuildSetting) => {
-    const canvas = Canvas.createCanvas(x,y)
-    const context = canvas.getContext('2d');
+    console.log(GuildSetting);
+    if (GuildSetting.welcomeChannel == null || GuildSetting.welcomeChannel == undefined) return;
+    if ((GuildSetting["welcomeMessage"] == null || GuildSetting["welcomeMessage"] == undefined) && (GuildSetting["welcomeBanner"]["img"]["data"] == null || GuildSetting["welcomeBanner"]["img"]["data"] == undefined)) return;
+    var chnl = await client.channels.fetch(GuildSetting.welcomeChannel);
+
+    if ((GuildSetting["welcomeBanner"]["img"]["data"] == null || GuildSetting["welcomeBanner"]["img"]["data"] == undefined)){
+        const mentionMessage = GuildSetting["welcomeMessage"].replace("&mention", `<@${member.user.id}>`)
+        return await chnl.send({
+            content : mentionMessage
+        })
+    }
     
+    if ((GuildSetting["welcomeMessage"] == null || GuildSetting["welcomeMessage"] == undefined)){
+        const imageBuffer = GuildSetting["welcomeBanner"]["img"]["data"];
+        const avatarURL = await client.downloadImage(member.user.displayAvatarURL({ format: 'jpg' })).catch((err) => message.react('❌'));
+        const userTag = member.user.tag; 
+
+        const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag);
+
+        return await chnl.send({
+            files: [{
+                attachment: resizedImage,
+                name: "image.jpg"
+            }]
+        })
+    }
+
+    const mentionMessage = GuildSetting["welcomeMessage"].replace("&mention", `<@${member.user.id}>`)
+    const imageBuffer = GuildSetting["welcomeBanner"]["img"]["data"];
+    const avatarURL = await client.downloadImage(member.user.displayAvatarURL({ format: 'jpg' })).catch((err) => message.react('❌'));
+    const userTag = member.user.tag; 
+
+    const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag);
+
+    return await chnl.send({
+        content : mentionMessage,
+        files: [{
+            attachment: resizedImage,
+            name: "image.jpg"
+        }]
+    })    
     // AttachmentBuilder(buffer, { name: 'image.png' });
 }
 

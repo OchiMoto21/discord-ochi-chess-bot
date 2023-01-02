@@ -18,9 +18,11 @@
     "chess.js": "^0.12.0",
     "discord.js": "^13.7.0",
     "dotenv": "^16.0.1",
+    "got": "^12.5.3",
     "mongoose": "^6.3.5",
     "node-fetch": "^3.2.3",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "sharp": "^0.31.3"
   },
   "resolutions": {
     "minimist": "1.2.6"

@@ -1,9 +1,11 @@
+// var request = require("request")
+
 
 module.exports = {
     name: 'set',
     aliases: [],
     description: "Command for setting each guild",
-    async execute(message, args, cmd, client,   ){
+    async execute(message, args, cmd, client,Discord){
         if (!message.member.permissions.has('ADMINISTRATOR')) return;
         const GuildSetting = await client.createGuildSettings(message.member);
         let m = args;
@@ -16,19 +18,48 @@ module.exports = {
                 GuildSetting[args[0]] = DateConstructor(m.slice(1).join(" ").trim());
                 break;
             case "welcomeBanner": // Image inputs WIP
-                console.log(message.attachments);
+                if (message.attachments.size == 0) return message.react('❌'); // Working 
+                console.log(message.attachments.first().url);
+                
+                const imageBuffer = await client.downloadImage(message.attachments.first().url).catch((err) => message.react('❌'));
+                const avatarURL = await client.downloadImage(message.member.user.displayAvatarURL({ format: 'jpg' })).catch((err) => message.react('❌'));
+                const userTag = message.member.user.tag; 
+                console.log(avatarURL);
+
+                GuildSetting[args[0]]["name"] = message.attachments.first().name;
+                GuildSetting[args[0]]["img"]["data"] = imageBuffer;
+                GuildSetting[args[0]]["img"]["contentType"] = message.attachments.first().contentType;
+                const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag);
+
+                message.channel.send({
+                    files: [{
+                        attachment: resizedImage,
+                        name: "image.jpg"
+                    }]
+                });
+
+                break;
+            case "welcomeMessage":
+                GuildSetting[args[0]] = m.slice(1).join(" ").trim();
+
+                const mentionMessage = GuildSetting[args[0]].replace("&mention", `<@${message.member.user.id}>`)
+                message.channel.send({
+                  content: mentionMessage
+                });
                 break;
             default: // "LogChannel" "welcomeChannel" "welcomeMessage"
                 GuildSetting[args[0]] = m.slice(1).join(" ").trim();
                 break;
         }
         console.log(GuildSetting);
+
         await GuildSetting.save();
         
         console.log(`Guild ${message.guild.id} set`);
         return;
     }
 }
+
 
 //https://regex101.com/r/KpD1uq/1
 const DateConstructor = (str) => {
