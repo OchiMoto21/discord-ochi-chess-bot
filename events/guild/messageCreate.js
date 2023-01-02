@@ -1,6 +1,7 @@
 
 module.exports = async (Discord, client, message) => {
 
+    if (message.channel.id !== "825593098187833344") return;
     if (message.author.bot) return;
     await PassCheck(Discord, client, message).catch(err => console.log(err));
     
