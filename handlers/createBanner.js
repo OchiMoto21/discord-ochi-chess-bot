@@ -109,15 +109,15 @@ module.exports = (client) => {
             </style>
 
             <text x="50%" y="75%" text-anchor="middle" class="shadow" filter="url(#f1)">${text}</text>
-            <text x="50%" y="85%" text-anchor="middle" class="shadow-handle" filter="url(#f1)">${userTag}</text>
+            <text x="50%" y="80%" text-anchor="middle" class="shadow-handle" filter="url(#f1)">${userTag}</text>
             <text x="50%" y="90%" text-anchor="middle" class="shadow-number" filter="url(#f1)"> You are the ${userNumber}th member!</text>
 
             <text x="50%" y="75%" text-anchor="middle" class="shadow" filter="url(#f1)">${text}</text>
-            <text x="50%" y="85%" text-anchor="middle" class="shadow-handle" filter="url(#f1)">${userTag}</text>
+            <text x="50%" y="80%" text-anchor="middle" class="shadow-handle" filter="url(#f1)">${userTag}</text>
             <text x="50%" y="90%" text-anchor="middle" class="shadow-number" filter="url(#f1)"> You are the ${userNumber}th member!</text>
 
             <text x="50%" y="75%" text-anchor="middle" class="title" >${text}</text>
-            <text x="50%" y="85%" text-anchor="middle" class="handle" >${userTag}</text>
+            <text x="50%" y="80%" text-anchor="middle" class="handle" >${userTag}</text>
             <text x="50%" y="90%" text-anchor="middle" class="number" > You are the ${userNumber}th member!</text>
 
             </svg>
