@@ -25,10 +25,11 @@ const welcomeNotif = async (Discord,client,member,GuildSetting) => {
     
     if ((GuildSetting["welcomeMessage"] == null || GuildSetting["welcomeMessage"] == undefined)){
         const imageBuffer = GuildSetting["welcomeBanner"]["img"]["data"];
-        const avatarURL = await client.downloadImage(member.user.displayAvatarURL({ format: 'jpg', size: 512 })).catch((err) => message.react('❌'));
-        const userTag = member.user.tag; 
+        const avatarURL = await client.downloadImage(member.user.displayAvatarURL({ format: 'jpg', size: 512 })).catch((err) => console.log(err));
+        const userTag = member.user.tag;
+        const userNumber = member.guild.memberCount;
 
-        const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag);
+        const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag, userNumber);
 
         return await chnl.send({
             files: [{
@@ -40,10 +41,12 @@ const welcomeNotif = async (Discord,client,member,GuildSetting) => {
 
     const mentionMessage = GuildSetting["welcomeMessage"].replaceAll("&mention", `<@${member.user.id}>`)
     const imageBuffer = GuildSetting["welcomeBanner"]["img"]["data"];
-    const avatarURL = await client.downloadImage(member.user.displayAvatarURL({ format: 'jpg', size: 512 })).catch((err) => message.react('❌'));
-    const userTag = member.user.tag; 
+    const avatarURL = await client.downloadImage(member.user.displayAvatarURL({ format: 'jpg', size: 512 })).catch((err) => console.log(err));
+    const userTag = member.user.tag;
+    const userNumber = member.guild.memberCount;
 
-    const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag);
+
+    const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag, userNumber);
 
     return await chnl.send({
         content : mentionMessage,

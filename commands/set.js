@@ -26,12 +26,14 @@ module.exports = {
                 const imageBuffer = await client.downloadImage(message.attachments.first().url).catch((err) => message.react('❌'));
                 const avatarURL = await client.downloadImage(message.member.user.displayAvatarURL({ format: 'jpg' , size: 512})).catch((err) => message.react('❌'));
                 const userTag = message.member.user.tag; 
+                const userNumber = message.member.guild.memberCount;
+                console.log(userNumber);
                 console.log(avatarURL);
 
                 GuildSetting[args[0]]["name"] = message.attachments.first().name;
                 GuildSetting[args[0]]["img"]["data"] = imageBuffer;
                 GuildSetting[args[0]]["img"]["contentType"] = message.attachments.first().contentType;
-                const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag);
+                const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag, userNumber);
 
                 message.channel.send({
                     files: [{

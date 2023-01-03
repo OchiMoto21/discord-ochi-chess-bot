@@ -1,7 +1,7 @@
 const sharp = require('sharp');
 module.exports = (client) => {
 
-    client.createBanner = async (imageBuffer,avatarURL,userTag) => {
+    client.createBanner = async (imageBuffer,avatarURL,userTag, userNumber) => {
         const metadata = await sharp(imageBuffer).metadata();
         const { entropy, sharpness, dominant } = await sharp(imageBuffer).stats();
         const { r, g, b } = dominant;
@@ -96,13 +96,30 @@ module.exports = (client) => {
                 fill: white;
                 font-size: ${parseInt(height/15)}px;
             }
+            .shadow-number {
+                font-family:"Coustard"; 
+                fill: black;
+                font-size: ${parseInt(height/20)}px;
+            }
+            .number {
+                font-family:"Coustard"; 
+                fill: white;
+                font-size: ${parseInt(height/20)}px;
+            }
             </style>
+
             <text x="50%" y="75%" text-anchor="middle" class="shadow" filter="url(#f1)">${text}</text>
             <text x="50%" y="85%" text-anchor="middle" class="shadow-handle" filter="url(#f1)">${userTag}</text>
+            <text x="50%" y="90%" text-anchor="middle" class="shadow-number" filter="url(#f1)"> You are the ${userNumber}th member!</text>
+
             <text x="50%" y="75%" text-anchor="middle" class="shadow" filter="url(#f1)">${text}</text>
             <text x="50%" y="85%" text-anchor="middle" class="shadow-handle" filter="url(#f1)">${userTag}</text>
+            <text x="50%" y="90%" text-anchor="middle" class="shadow-number" filter="url(#f1)"> You are the ${userNumber}th member!</text>
+
             <text x="50%" y="75%" text-anchor="middle" class="title" >${text}</text>
             <text x="50%" y="85%" text-anchor="middle" class="handle" >${userTag}</text>
+            <text x="50%" y="90%" text-anchor="middle" class="number" > You are the ${userNumber}th member!</text>
+
             </svg>
         `;
         console.log(svgImage);
