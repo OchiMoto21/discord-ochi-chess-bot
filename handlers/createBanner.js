@@ -67,16 +67,14 @@ module.exports = (client) => {
                 <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
             </filter>
             <style>
-            @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One');
             @font-face {
                 font-family: 'Alfa Slab One';
-                src: url('https://fonts.gstatic.com/s/alfaslabone/v10/6NUQ8FmMKwSEKjnm5-4v-4Jh6dVretWvYmE.woff2') format('woff2');
+                src: url('./AlfaSlabOne-Regular.ttf') format('truetype');
             }
             
-            @import url('https://fonts.googleapis.com/css2?family=Coustard');
             @font-face {
                 font-family: 'Coustard';
-                src: url('https://fonts.gstatic.com/s/coustard/v12/3XFpErgcbhNPDZV-GZ-wZyDlBQ.woff2') format('woff2');
+                src: url('./Coustard-Regular.ttf') format('truetype');
             }
             .shadow {
                 font-family:"Alfa Slab One"; 

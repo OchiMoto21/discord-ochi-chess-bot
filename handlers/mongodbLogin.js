@@ -1,7 +1,7 @@
 //const config = require('../config.json');
 const mongoose = require('mongoose');
 const fs = require('fs');
-const uri = process.env.mongoDB_TOKEN_NONSRV;
+const uri = process.env.mongoDB_TOKEN;
 //const uri = config.mongoDB_TOKEN;
 const mongodb_Eventfiles = fs.readdirSync(`./events/mongodb`).filter(file => file.endsWith('.js'));
 

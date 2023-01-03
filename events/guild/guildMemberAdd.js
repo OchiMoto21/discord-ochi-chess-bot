@@ -17,7 +17,7 @@ const welcomeNotif = async (Discord,client,member,GuildSetting) => {
     var chnl = await client.channels.fetch(GuildSetting.welcomeChannel);
 
     if ((GuildSetting["welcomeBanner"]["img"]["data"] == null || GuildSetting["welcomeBanner"]["img"]["data"] == undefined)){
-        const mentionMessage = GuildSetting["welcomeMessage"].replace("&mention", `<@${member.user.id}>`)
+        const mentionMessage = GuildSetting["welcomeMessage"].replaceAll("&mention", `<@${member.user.id}>`)
         return await chnl.send({
             content : mentionMessage
         })
@@ -25,7 +25,7 @@ const welcomeNotif = async (Discord,client,member,GuildSetting) => {
     
     if ((GuildSetting["welcomeMessage"] == null || GuildSetting["welcomeMessage"] == undefined)){
         const imageBuffer = GuildSetting["welcomeBanner"]["img"]["data"];
-        const avatarURL = await client.downloadImage(member.user.displayAvatarURL({ format: 'jpg' })).catch((err) => message.react('❌'));
+        const avatarURL = await client.downloadImage(member.user.displayAvatarURL({ format: 'jpg', size: 512 })).catch((err) => message.react('❌'));
         const userTag = member.user.tag; 
 
         const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag);
@@ -38,9 +38,9 @@ const welcomeNotif = async (Discord,client,member,GuildSetting) => {
         })
     }
 
-    const mentionMessage = GuildSetting["welcomeMessage"].replace("&mention", `<@${member.user.id}>`)
+    const mentionMessage = GuildSetting["welcomeMessage"].replaceAll("&mention", `<@${member.user.id}>`)
     const imageBuffer = GuildSetting["welcomeBanner"]["img"]["data"];
-    const avatarURL = await client.downloadImage(member.user.displayAvatarURL({ format: 'jpg' })).catch((err) => message.react('❌'));
+    const avatarURL = await client.downloadImage(member.user.displayAvatarURL({ format: 'jpg', size: 512 })).catch((err) => message.react('❌'));
     const userTag = member.user.tag; 
 
     const resizedImage = await client.createBanner(imageBuffer,avatarURL, userTag);

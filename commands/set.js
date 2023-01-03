@@ -22,7 +22,7 @@ module.exports = {
                 console.log(message.attachments.first().url);
                 
                 const imageBuffer = await client.downloadImage(message.attachments.first().url).catch((err) => message.react('❌'));
-                const avatarURL = await client.downloadImage(message.member.user.displayAvatarURL({ format: 'jpg' })).catch((err) => message.react('❌'));
+                const avatarURL = await client.downloadImage(message.member.user.displayAvatarURL({ format: 'jpg' , size: 512})).catch((err) => message.react('❌'));
                 const userTag = message.member.user.tag; 
                 console.log(avatarURL);
 
@@ -42,7 +42,7 @@ module.exports = {
             case "welcomeMessage":
                 GuildSetting[args[0]] = m.slice(1).join(" ").trim();
 
-                const mentionMessage = GuildSetting[args[0]].replace("&mention", `<@${message.member.user.id}>`)
+                const mentionMessage = GuildSetting[args[0]].replaceAll("&mention", `<@${message.member.user.id}>`)
                 message.channel.send({
                   content: mentionMessage
                 });
