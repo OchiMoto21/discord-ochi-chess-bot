@@ -18,7 +18,9 @@ module.exports = {
                 GuildSetting[args[0]] = DateConstructor(m.slice(1).join(" ").trim());
                 break;
             case "welcomeBanner": // Image inputs WIP
-                if (message.attachments.size == 0) return message.react('❌'); // Working 
+                if (message.attachments.size == 0) return message.react('❌'); // Working
+                if (message.attachments.first().height == null || message.attachments.first().width == null || message.attachments.first().height == undefined || message.attachments.first().width == undefined) return  message.react('❌');
+                if (message.attachments.first().height > 512 || message.attachments.first().width > 1024) return message.channel.send('Image size must be less or equal than 1024 (width) x 512 (height)');
                 console.log(message.attachments.first().url);
                 
                 const imageBuffer = await client.downloadImage(message.attachments.first().url).catch((err) => message.react('❌'));
