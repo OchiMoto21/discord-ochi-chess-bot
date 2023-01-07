@@ -60,7 +60,7 @@ module.exports = {
                         { name :"Bonk count", value: `<:kaelanoted:961838924379062302> ${KaelaBonkLevelPlayer.bonk_count} bonk(s)`,inline: true},
                         { name :"Bonk needed for upgrade", value: `<a:kaelanumahammer:962582163251949578> ${bonkRequired(KaelaBonkLevelPlayer.level,KaelaBonkLevelPlayer.bonk_count)} bonk(s)`}
                     ];
-                    Embed.image.url = `http://drive.google.com/uc?export=view&id=1dbdS2pWIGWIob1jU84Rf4AMuUC1Si56f`;
+                    Embed.image.url = `https://cdn.discordapp.com/attachments/1006146433247891566/1061309084982325318/smithing_success.png`;
                     await message.channel.send({embeds : [Embed]}).catch(err => {
                         console.log(err);
                         if (err instanceof Discord.HTTPError) {
@@ -81,7 +81,7 @@ module.exports = {
                         { name :"Bonk count ", value: `<:kaelanoted:961838924379062302> ${KaelaBonkLevelPlayer.bonk_count} bonk(s)`, inline: true},
                         { name :"Bonk needed for upgrade", value: `<a:kaelanumahammer:962582163251949578> ${bonkRequired(KaelaBonkLevelPlayer.level,KaelaBonkLevelPlayer.bonk_count)} bonk(s)`},
                     ];
-                    Embed.thumbnail.url = 'http://drive.google.com/uc?export=view&id=1exSrTK0XEEVNzrvL87IgRMTA9Qd0K5EP';
+                    Embed.thumbnail.url = 'https://cdn.discordapp.com/attachments/1006146433247891566/1061309084458029256/smithing_fail.png';
                     await message.channel.send({embeds : [Embed]}).catch(err => {
                         console.log(err);
                         if (err instanceof Discord.HTTPError) {
@@ -101,7 +101,7 @@ module.exports = {
                         { name :"Bonk count ", value: `<:kaelanoted:961838924379062302> ${KaelaBonkLevelPlayer.bonk_count} bonk(s)`,inline: true},
                         { name :"Bonk needed for upgrade", value: `<a:kaelanumahammer:962582163251949578> ${bonkRequired(KaelaBonkLevelPlayer.level,KaelaBonkLevelPlayer.bonk_count)} bonk(s)`},
                     ];
-                    Embed.thumbnail.url = 'http://drive.google.com/uc?export=view&id=1dbdS2pWIGWIob1jU84Rf4AMuUC1Si56f';
+                    Embed.thumbnail.url = 'https://cdn.discordapp.com/attachments/1006146433247891566/1061309084982325318/smithing_success.png';
                     await message.channel.send({embeds : [Embed]}).catch(err => {
                         console.log(err);
                         if (err instanceof Discord.HTTPError) {
@@ -119,7 +119,7 @@ module.exports = {
                         { name :"Bonk count", value: `<:kaelanoted:961838924379062302> ${KaelaBonkLevelPlayer.bonk_count} bonk(s)`,inline: true},
                         { name :"Bonk needed for upgrade", value: `<a:kaelanumahammer:962582163251949578> ${bonkRequired(KaelaBonkLevelPlayer.level,KaelaBonkLevelPlayer.bonk_count)} bonk(s)`},
                     ];
-                    Embed.thumbnail.url = 'http://drive.google.com/uc?export=view&id=1exSrTK0XEEVNzrvL87IgRMTA9Qd0K5EP';
+                    Embed.thumbnail.url = 'https://cdn.discordapp.com/attachments/1006146433247891566/1061309084458029256/smithing_fail.png';
                     await message.channel.send({embeds : [Embed]}).catch(err => {
                         console.log(err);
                         if (err instanceof Discord.HTTPError) {
