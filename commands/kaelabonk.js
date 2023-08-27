@@ -37,7 +37,7 @@ module.exports = {
 
             // Convert to unix timestamp https://stackoverflow.com/questions/46237707/node-js-converting-date-string-to-unix-timestamp
             var createdAtUnix = Math.floor(message.createdAt.getTime()/1000);
-            var lastBonkTimeUnix = Math.floor(KaelaBonkLevelPlayer.createdTimestamp.getTime()/1000);
+            if (KaelaBonkLevelPlayer.createdTimestamp !== null) {var lastBonkTimeUnix = Math.floor(KaelaBonkLevelPlayer.createdTimestamp.getTime()/1000)};
             // Check the cooldown time
             if (KaelaBonkLevelPlayer.createdTimestamp !== null) {
                 var timeDifference = message.createdAt.getTime() - KaelaBonkLevelPlayer.createdTimestamp.getTime();
