@@ -39,17 +39,19 @@ module.exports = {
             var createdAtUnix = Math.floor(message.createdAt.getTime()/1000);
             var lastBonkTimeUnix = Math.floor(KaelaBonkLevelPlayer.createdTimestamp.getTime()/1000);
             // Check the cooldown time
-            var timeDifference = message.createdAt.getTime() - KaelaBonkLevelPlayer.createdTimestamp.getTime();
-            
-            if ( timeDifference < 60*30*1000) {
-                var NextBonkTime = lastBonkTimeUnix + 60*30;    
-                Embed.author = null;
-                Embed.description = `**${message.author.username}** next bonk is <t:${NextBonkTime}:R> <a:elanguinsway:967462309276573727>`;
-                await message.channel.send({
-                    embeds : [Embed]
-                    })
-                return;
-            }
+            if (KaelaBonkLevelPlayer.createdTimestamp !== null) {
+                var timeDifference = message.createdAt.getTime() - KaelaBonkLevelPlayer.createdTimestamp.getTime();
+                
+                if ( timeDifference < 60*30*1000) {
+                    var NextBonkTime = lastBonkTimeUnix + 60*30;    
+                    Embed.author = null;
+                    Embed.description = `**${message.author.username}** next bonk is <t:${NextBonkTime}:R> <a:elanguinsway:967462309276573727>`;
+                    await message.channel.send({
+                        embeds : [Embed]
+                        })
+                    return;
+                }
+            } 
             
             // Determine the success probability
             if (KaelaBonkLevelPlayer.level <= 25){
