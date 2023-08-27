@@ -4,7 +4,7 @@ module.exports = async (Discord, client, message) => {
     if (message.author.bot) return;
     await PassCheck(Discord, client, message).catch(err => console.log(err));
     
-    if (message.content.includes('<:kaelabonk:956580833374928937>')){
+    if (message.content.includes('<:kaelabonk:956580833374928937>')||message.content.includes('🔨')){
         const command = client.commands.get("kaelabonk");
         const cmd = "";
         const args = "";
